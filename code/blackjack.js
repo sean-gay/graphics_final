@@ -4,9 +4,26 @@ var gl;
 var vertices;
 var u_ColorLoc;
 
-// Initial Info
+// Initial Setup Info
 var Name;
 var userStack;
+
+// Chips 
+var chipVertices;
+var chipOnePrimary;
+var chipOneSecondary;
+var chipFivePrimary;
+var chipFiveSecondary;
+var chipTenPrimary;
+var chipTenSecondary;
+var chipTwoFivePrimary;
+var chipTwoFiveSecondary;
+
+// Cards 
+var card;
+
+// Gameplay
+var currState = 0;
 
 window.onload = function init(){
     var canvas = document.getElementById( "gl-canvas" );
@@ -15,7 +32,10 @@ window.onload = function init(){
     if ( !gl ) { alert( "WebGL isn't available" ); }
 
     gl.viewport( 0, 0, canvas.width, canvas.height );
-    gl.clearColor( 0.8, 0.8, 0.8, 1.0 );
+    gl.clearColor( 0.14, 0.58, 0.15, 1.0 );
+
+    // Setup Chips
+    createChips();
     
     var program = initShaders( gl, "vertex-shader", "fragment-shader" );
     gl.useProgram( program );
@@ -49,6 +69,28 @@ function initialSetup(){
         userStack = parseInt(userStackInput);
     }
     document.getElementById("Stack").innerHTML = userStack;
+}
+
+function createChips(){
+    // Generic Circle
+    var p = vec2(0.0, 0.0);
+    chipVertices = [p];
+    var radius = 1;
+    var increment = Math.PI/36;
+
+    for (var theta = 0.0; theta < Math.PI*2 - increment; theta += increment){
+        if(theta == 0.0){
+            chipVertices.push(vec2(Math.cos(theta)*radius, Math.sin(theta)*radius));
+        }
+        chipVertices.push(vec2(Math.cos(theta+increment)*radius, Math.sin(theta+increment)*radius));
+    }
+
+    chipOnePrimary = vec3(0.4, 0.4, 1.0);
+
+}
+
+function createCards(){
+
 }
 
 function render() {
