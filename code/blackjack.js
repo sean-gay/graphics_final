@@ -8,27 +8,6 @@ var u_ColorLoc;
 var Name;
 var userStack;
 
-function initialSetup(){
-    Name = prompt("Username:", "Enter Name");
-    if (Name == null || Name == "") {
-      Name = "User"
-    } 
-    document.getElementById("Name").innerHTML = Name;
-
-
-    userStack = -1;
-    while (userStack > 100 || userStack < 0){
-        var userStackInput = prompt("Starting Stack", "(10 - 100, Whole Dollars)");
-        while(isNaN(userStackInput)){
-            console.log("not a number");
-            userStackInput = prompt("Starting Stack", "(10 - 100, Whole Dollars)");
-        } 
-        userStack = parseInt(userStackInput);
-    }
-    document.getElementById("Stack").innerHTML = userStack;
-}
-
-
 window.onload = function init(){
     var canvas = document.getElementById( "gl-canvas" );
     
@@ -52,6 +31,25 @@ window.onload = function init(){
 
     render();
 };
+
+function initialSetup(){
+    Name = prompt("Username:", "Enter Name");
+    if (Name == null || Name == "") {
+      Name = "User"
+    } 
+    document.getElementById("Name").innerHTML = Name;
+    
+    userStack = -1;
+    while (userStack > 100 || userStack < 0){
+        var userStackInput = prompt("Starting Stack", "(10 - 100, Whole Dollars)");
+        while(isNaN(userStackInput)){
+            console.log("not a number");
+            userStackInput = prompt("Starting Stack", "(10 - 100, Whole Dollars)");
+        } 
+        userStack = parseInt(userStackInput);
+    }
+    document.getElementById("Stack").innerHTML = userStack;
+}
 
 function render() {
     gl.clear( gl.COLOR_BUFFER_BIT );
