@@ -6,6 +6,7 @@ var u_ColorLoc;
 var u_ctMatrixLoc;
 var theta = 0.0;
 var u_vCenterLoc;
+var canvas;
 
 // Initial Setup Info
 var Name;
@@ -23,7 +24,30 @@ var chipTenSecondary;
 var chipTwoFivePrimary;
 var chipTwoFiveSecondary;
 var matOne;
-var chipXCenter, chipYCenter;
+var matFive;
+var matTen;
+var matTwoFive;
+var chipXCenterOne, chipYCenterOne;
+var chipXCenterFive, chipYCenterFive;
+var chipXCenterTen, chipYCenterTen;
+var chipXCenterTwoFive, chipYCenterTwoFive;
+var chipMoveOne = false;
+var chipMoveFive = false;
+var chipMoveTen = false;
+var chipMoveTwoFive = false;
+var scalingOutOne = .2;
+var scalingMarkerOne = .03;
+var scalingOutFive = .2;
+var scalingMarkerFive = .03;
+var scalingOutTen= .2;
+var scalingMarkerTen = .03;
+var scalingOutTwoFive = .2;
+var scalingMarkerTwoFive = .03;
+
+// Bets
+var position = 0;
+var betScaleOut = .1;
+var betScaleMarker = .015;
 
 // Cards 
 var card;
@@ -35,7 +59,7 @@ var tally = 0;
 
 window.onload = function init(){
     // general webgl setup
-    var canvas = document.getElementById( "gl-canvas" );
+    canvas = document.getElementById( "gl-canvas" );
     gl = WebGLUtils.setupWebGL( canvas );
     if ( !gl ) { alert( "WebGL isn't available" ); }
     gl.viewport( 0, 0, canvas.width, canvas.height );
@@ -86,8 +110,17 @@ function initialSetup(){
 
 // This function creates the vertices for the a chip circle, sets colors
 function createChips(){
-    chipXCenter = 0.5;
-    chipYCenter = 0.5;
+    chipXCenterOne = -0.5;
+    chipYCenterOne = 0.5;
+
+    chipXCenterFive = 0.5;
+    chipYCenterFive = 0.5;
+
+    chipXCenterTen = -0.5;
+    chipYCenterTen = -0.5;
+
+    chipXCenterTwoFive = 0.5;
+    chipYCenterTwoFive = -0.5;
 
     // Generic Circle
     var p = vec2(0.0, 0.0);
@@ -134,6 +167,83 @@ function createChips(){
 
 }
 
+function showBets(position, value){
+    // Create Bet
+    var matBet;
+    var trans;
+    var tm, sm, rm, pm;
+    var centerBetX = 0.9;
+    var centerBetY;
+    var colorBetPrimary;
+    var colorBetSecondary;
+    if (position == 1){
+        centerBetY = -0.9
+    } else if(position == 2){
+        centerBetY = -0.7
+    } else if (position == 3){
+        centerBetY = -0.5
+    } else if (position == 4){
+        centerBetY = -0.3
+    } else if (position == 5){
+        centerBetY = -0.1
+    }
+
+    if (value == 1){
+        colorBetPrimary = chipOnePrimary;
+        colorBetSecondary = chipOneSecondary;
+    } else if (value == 5){
+        colorBetPrimary = chipFivePrimary;
+        colorBetSecondary = chipFiveSecondary;
+    } else if (value == 10){
+        colorBetPrimary = chipTenPrimary;
+        colorBetSecondary = chipTenSecondary;
+    } else if (value == 25){
+        colorBetPrimary = chipTwoFivePrimary;
+        colorBetSecondary = chipTwoFiveSecondary;
+    }
+ 
+    var translationX;
+    var translationY;
+
+    pm = ortho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+
+    matBet = mat4();
+    theta = 0.0; // in degree
+    trans = 0;
+    translationX = centerBetX;
+    translationY = centerBetY; 
+    sm = scalem(betScaleOut, betScaleOut, betScaleOut);
+    rm = rotateZ(theta);
+    tm = translate(translationX, translationY, 0.0);
+    matBet = mult(sm, matBet);
+    matBet = mult(rm, matBet);
+    matBet = mult(tm, matBet);
+    matBet = mult(pm, matBet);
+    gl.uniform3fv( u_ColorLoc, colorBetPrimary );
+    gl.uniformMatrix4fv(u_ctMatrixLoc, false, flatten(matBet));
+    gl.drawArrays( gl.TRIANGLE_FAN, 0, 74);
+    // One Dollar Markers 
+    theta = 0;
+    var chipMarkers;
+    for (var i = 0; i < 8; i++){
+        chipMarkers = mat4();
+        theta -= 45;
+        var thetaRadians = theta * Math.PI/180;
+        translationX =  (centerBetX) + (Math.cos(thetaRadians)*.20 + 0) / 2;
+        translationY =  (centerBetY) + (Math.sin(thetaRadians)*.20 + 0) / 2;
+        rm = rotateZ(theta);
+        tm = translate(translationX, translationY, 0.0);
+        sm = scalem(betScaleMarker, betScaleMarker, betScaleMarker);
+        chipMarkers = mult(sm, chipMarkers);
+        chipMarkers = mult(rm, chipMarkers);
+        chipMarkers = mult(tm, chipMarkers);
+        chipMarkers = mult(pm, chipMarkers);
+        gl.uniform3fv( u_ColorLoc, colorBetSecondary );
+        gl.uniformMatrix4fv(u_ctMatrixLoc, false, flatten(chipMarkers));
+        gl.drawArrays( gl.TRIANGLE_FAN, 74, 6);
+    }
+}
+
 // The Initial Game State
 // User can pick bets
 function selectBets(){
@@ -142,42 +252,117 @@ function selectBets(){
     var tm, sm, rm, pm;
     var translationX;
     var translationY;
+    pm = ortho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+
+    // Check chip selection
     gl.uniform2fv(u_vCenterLoc, vec2(0, 0));
+    canvas.addEventListener("mousedown", function(event){
+        var t = vec2(2*(event.clientX - event.target.getBoundingClientRect().left)/canvas.width - 1,
+        2*(canvas.height - (event.clientY - event.target.getBoundingClientRect().top))/canvas.height - 1);
+    
+        if ( (chipXCenterOne - .15 <= t[0]) && (t[0] <=  chipXCenterOne + .15) && (t[1] <=  chipYCenterOne + .15) && (t[1] >=  chipYCenterOne - .15) ){
+            chipMoveOne = true;
+        }
+
+        if ( (chipXCenterFive - .15 <= t[0]) && (t[0] <=  chipXCenterFive + .15) && (t[1] <=  chipYCenterFive + .15) && (t[1] >=  chipYCenterFive - .15) ){
+            chipMoveFive = true;
+        }
+
+        if ( (chipXCenterTen - .15 <= t[0]) && (t[0] <=  chipXCenterTen + .15) && (t[1] <=  chipYCenterTen + .15) && (t[1] >=  chipYCenterTen - .15) ){
+            chipMoveTen = true;
+        }
+
+        if ( (chipXCenterTwoFive - .15 <= t[0]) && (t[0] <=  chipXCenterTwoFive + .15) && (t[1] <=  chipYCenterTwoFive + .15) && (t[1] >=  chipYCenterTwoFive - .15) ){
+            chipMoveTwoFive = true;
+        }
+
+    });
+
+    // Update based on position
+    if (chipMoveOne == true){
+        chipXCenterOne += .01;
+        scalingOutOne /= 1.001;
+        scalingMarkerOne /= 1.001;
+        if (chipXCenterOne > 1){
+            chipXCenterOne = -0.5;
+            chipMoveOne = false;
+            scalingOutOne = .2;
+            scalingMarkerOne = .03;
+            position += 1;
+            showBets(position, 1);
+        }
+    }
+
+    if (chipMoveFive == true){
+        chipXCenterFive += .01;
+        scalingOutFive /= 1.001;
+        scalingMarkerFive /= 1.001;
+        if (chipXCenterFive > 1){
+            chipXCenterFive = 0.5;
+            chipMoveFive = false;
+            scalingOutFive = .2;
+            scalingMarkerFive = .03;
+            position += 1;
+            showBets(position, 5);
+        }
+    }
+
+    if (chipMoveTen == true){
+        chipXCenterTen += .01;
+        scalingOutTen /= 1.001;
+        scalingMarkerTen /= 1.001;
+        if (chipXCenterTen > 1){
+            chipXCenterTen = -0.5;
+            chipMoveTen = false;
+            scalingOutTen = .2;
+            scalingMarkerTen = .03;
+            position += 1;
+            showBets(position, 10);
+        }
+    }
+
+    if (chipMoveTwoFive == true){
+        chipXCenterTwoFive += .01;
+        scalingOutTwoFive /= 1.001;
+        scalingMarkerTwoFive /= 1.001;
+        if (chipXCenterTwoFive > 1){
+            chipXCenterTwoFive = 0.5;
+            chipMoveTwoFive = false;
+            scalingOutTwoFive = .2;
+            scalingMarkerTwoFive = .03;
+            position += 1;
+            showBets(position, 25);
+        }
+    }
 
     // One Dollar
-    chipXCenter = -.5;
-    chipYCenter = .5;
     matOne = mat4();
     theta = 0.0; // in degree
     trans = 0;
-    var scalingOut = .2;
-    translationX = chipXCenter;
-    translationY = chipYCenter; 
-    sm = scalem(scalingOut, scalingOut, scalingOut);
+    translationX = chipXCenterOne;
+    translationY = chipYCenterOne; 
+    sm = scalem(scalingOutOne, scalingOutOne, scalingOutOne);
     rm = rotateZ(theta);
     tm = translate(translationX, translationY, 0.0);
     matOne = mult(sm, matOne);
     matOne = mult(rm, matOne);
     matOne = mult(tm, matOne);
-    pm = ortho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
     matOne = mult(pm, matOne);
     gl.uniform3fv( u_ColorLoc, chipOnePrimary );
     gl.uniformMatrix4fv(u_ctMatrixLoc, false, flatten(matOne));
     gl.drawArrays( gl.TRIANGLE_FAN, 0, 74);
-
-    // Markers 
+    // One Dollar Markers 
     theta = 0;
     var chipMarkers;
     for (var i = 0; i < 8; i++){
         chipMarkers = mat4();
-        var scalingMarker = .03;
         theta -= 45;
         var thetaRadians = theta * Math.PI/180;
-        translationX = Math.cos(thetaRadians)*.20 + chipXCenter;
-        translationY = Math.sin(thetaRadians)*.20 + chipYCenter;
+        translationX =  (Math.cos(thetaRadians)*.20 + chipXCenterOne);
+        translationY =  (Math.sin(thetaRadians)*.20 + chipYCenterOne);
         rm = rotateZ(theta);
         tm = translate(translationX, translationY, 0.0);
-        sm = scalem(scalingMarker, scalingMarker, scalingMarker);
+        sm = scalem(scalingMarkerOne, scalingMarkerOne, scalingMarkerOne);
         chipMarkers = mult(sm, chipMarkers);
         chipMarkers = mult(rm, chipMarkers);
         chipMarkers = mult(tm, chipMarkers);
@@ -187,6 +372,116 @@ function selectBets(){
         gl.drawArrays( gl.TRIANGLE_FAN, 74, 6);
     }
 
+    // Five Dollar
+    matFive = mat4();
+    theta = 0.0; // in degree
+    trans = 0;
+    translationX = chipXCenterFive;
+    translationY = chipYCenterFive; 
+    sm = scalem(scalingOutFive, scalingOutFive, scalingOutFive);
+    rm = rotateZ(theta);
+    tm = translate(translationX, translationY, 0.0);
+    matFive = mult(sm, matFive);
+    matFive = mult(rm, matFive);
+    matFive = mult(tm, matFive);
+    matFive = mult(pm, matFive);
+    gl.uniform3fv( u_ColorLoc, chipFivePrimary );
+    gl.uniformMatrix4fv(u_ctMatrixLoc, false, flatten(matFive));
+    gl.drawArrays( gl.TRIANGLE_FAN, 0, 74);
+    // Five Dollar Markers 
+    theta = 0;
+    var chipMarkers;
+    for (var i = 0; i < 8; i++){
+        chipMarkers = mat4();
+        theta -= 45;
+        var thetaRadians = theta * Math.PI/180;
+        translationX =  (Math.cos(thetaRadians)*.20 + chipXCenterFive);
+        translationY =  (Math.sin(thetaRadians)*.20 + chipYCenterFive);
+        rm = rotateZ(theta);
+        tm = translate(translationX, translationY, 0.0);
+        sm = scalem(scalingMarkerFive, scalingMarkerFive, scalingMarkerFive);
+        chipMarkers = mult(sm, chipMarkers);
+        chipMarkers = mult(rm, chipMarkers);
+        chipMarkers = mult(tm, chipMarkers);
+        chipMarkers = mult(pm, chipMarkers);
+        gl.uniform3fv( u_ColorLoc, chipFiveSecondary );
+        gl.uniformMatrix4fv(u_ctMatrixLoc, false, flatten(chipMarkers));
+        gl.drawArrays( gl.TRIANGLE_FAN, 74, 6);
+    }
+
+    // Ten Dollar
+    matTen = mat4();
+    theta = 0.0; // in degree
+    trans = 0;
+    translationX = chipXCenterTen;
+    translationY = chipYCenterTen; 
+    sm = scalem(scalingOutTen, scalingOutTen, scalingOutTen);
+    rm = rotateZ(theta);
+    tm = translate(translationX, translationY, 0.0);
+    matTen = mult(sm, matTen);
+    matTen = mult(rm, matTen);
+    matTen = mult(tm, matTen);
+    matTen = mult(pm, matTen);
+    gl.uniform3fv( u_ColorLoc, chipTenPrimary );
+    gl.uniformMatrix4fv(u_ctMatrixLoc, false, flatten(matTen));
+    gl.drawArrays( gl.TRIANGLE_FAN, 0, 74);
+    // Ten Dollar Markers 
+    theta = 0;
+    var chipMarkers;
+    for (var i = 0; i < 8; i++){
+        chipMarkers = mat4();
+        theta -= 45;
+        var thetaRadians = theta * Math.PI/180;
+        translationX =  (Math.cos(thetaRadians)*.20 + chipXCenterTen);
+        translationY =  (Math.sin(thetaRadians)*.20 + chipYCenterTen);
+        rm = rotateZ(theta);
+        tm = translate(translationX, translationY, 0.0);
+        sm = scalem(scalingMarkerTen, scalingMarkerTen, scalingMarkerTen);
+        chipMarkers = mult(sm, chipMarkers);
+        chipMarkers = mult(rm, chipMarkers);
+        chipMarkers = mult(tm, chipMarkers);
+        chipMarkers = mult(pm, chipMarkers);
+        gl.uniform3fv( u_ColorLoc, chipTenSecondary );
+        gl.uniformMatrix4fv(u_ctMatrixLoc, false, flatten(chipMarkers));
+        gl.drawArrays( gl.TRIANGLE_FAN, 74, 6);
+    }
+
+    // Ten Dollar
+    matTwoFive = mat4();
+    theta = 0.0; // in degree
+    trans = 0;
+    translationX = chipXCenterTwoFive;
+    translationY = chipYCenterTwoFive; 
+    sm = scalem(scalingOutTwoFive, scalingOutTwoFive, scalingOutTwoFive);
+    rm = rotateZ(theta);
+    tm = translate(translationX, translationY, 0.0);
+    matTwoFive = mult(sm, matTwoFive);
+    matTwoFive = mult(rm, matTwoFive);
+    matTwoFive = mult(tm, matTwoFive);
+    matTwoFive = mult(pm, matTwoFive);
+    gl.uniform3fv( u_ColorLoc, chipTwoFivePrimary );
+    gl.uniformMatrix4fv(u_ctMatrixLoc, false, flatten(matTwoFive));
+    gl.drawArrays( gl.TRIANGLE_FAN, 0, 74);
+    // TwoFive Dollar Markers 
+    theta = 0;
+    var chipMarkers;
+    for (var i = 0; i < 8; i++){
+        chipMarkers = mat4();
+        theta -= 45;
+        var thetaRadians = theta * Math.PI/180;
+        translationX =  (Math.cos(thetaRadians)*.20 + chipXCenterTwoFive);
+        translationY =  (Math.sin(thetaRadians)*.20 + chipYCenterTwoFive);
+        rm = rotateZ(theta);
+        tm = translate(translationX, translationY, 0.0);
+        sm = scalem(scalingMarkerTwoFive, scalingMarkerTwoFive, scalingMarkerTwoFive);
+        chipMarkers = mult(sm, chipMarkers);
+        chipMarkers = mult(rm, chipMarkers);
+        chipMarkers = mult(tm, chipMarkers);
+        chipMarkers = mult(pm, chipMarkers);
+        gl.uniform3fv( u_ColorLoc, chipTwoFiveSecondary );
+        gl.uniformMatrix4fv(u_ctMatrixLoc, false, flatten(chipMarkers));
+        gl.drawArrays( gl.TRIANGLE_FAN, 74, 6);
+    }
 }
 
 
