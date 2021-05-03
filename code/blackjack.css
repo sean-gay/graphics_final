@@ -1,3 +1,7 @@
+* {
+  font-family: 'Roboto Mono', monospace;
+}
+
 body {
   display: flex;
   flex-direction: column;
@@ -30,24 +34,59 @@ body .title {
   width: 512px;
 }
 
-body .start-button-container {
+body .actions-container {
   display: flex;
-  flex-direction: column;
+  flex-flow: row wrap;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
   width: 512px;
+  padding: 3px;
 }
 
-body .start-button-container .start-button {
+body .actions-container button {
   transition-duration: 0.4s;
   background-color: white;
   color: black;
-  border: 2px solid #4CAF50; /* Green */
-  border-radius: 2px;
-  width: 33%;
+  border-radius: 4px;
+  width: 25%;
   padding: 5px;
-  margin: 10px 0px 10px 0px;
-  font-size: 20px;
+  margin: 10px 5px 10px 5px;
+  font-size: 15px;
+}
+
+body .actions-container button:hover {
+  cursor: pointer;
+}
+
+
+body .actions-container .start-button {
+  border: 2px solid #4CAF50; /* Green */
+}
+
+body .actions-container .start-button:hover {
+  border: 2px solid #4CAF50; /* Green */
+  background-color: #4CAF50; /* Green */
+  color: white;
+}
+
+body .actions-container .clear-all-bets {
+  border: 2px solid #ff0015; /* Red */
+}
+
+body .actions-container .clear-all-bets:hover {
+  border: 2px solid #ff0015; /* Red */
+  background-color: #ff0015;
+  color: white;
+}
+
+body .actions-container .remove-last-bet {
+  border: 2px solid #d4c222; /* Yellow */
+}
+
+body .actions-container .remove-last-bet:hover {
+  border: 2px solid #d4c222; /* Yellow */
+  background-color: #d4c222;
+  color: white;
 }
 
 body .interface {
@@ -61,9 +100,21 @@ body .interface .interface--title {
 }
 
 body .interface .interface--title h2 {
-  margin-bottom: 0px;
+  margin: 0px;
 }
 
 body .interface .interface--bet-area{
 
+}
+
+body .page-footer {
+  display: flex;
+  flex-direction: column;
+  width: 512px;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  margin: 10px;
+  background-color: #878683;
+  border-radius: 5px;
 }

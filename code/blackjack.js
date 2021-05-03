@@ -105,7 +105,7 @@ function initialSetup(){
     if (Name == null || Name == "") {
       Name = "User"
     }
-    document.getElementsByClassName("better-name")[0].textContent = `Name: ${Name}`//"Name: " + Name.toString();
+    document.getElementsByClassName("better-name")[0].textContent = `Name: ${Name}`
 
     userStack = -1;
     while (userStack > 100 || userStack < 10){
@@ -116,14 +116,14 @@ function initialSetup(){
         }
         userStack = parseInt(userStackInput);
     }
-    document.getElementById("Stack").innerHTML = `Stack: $${userStack}`; //userStack;
+    document.getElementsByClassName("better-stack")[0].textContent = `Stack: $${userStack.toString()}`;
     alert("\t\t\tSelect Your Bets! \n(White = $1, Red = $5, Blue = $10, Black = $25) \n\t\t\t (Up To 5 Chips)");
 
     originalStack = userStack;
 
     //Set inital bet information in HTML
     currentBet = 0;
-    document.getElementById("CurrentBet").innerHTML = currentBet;
+    document.getElementsByClassName("current-bet-amount")[0].textContent = `Current Bet Amount: $${currentBet}`;
 
     //Update Game State
     clearBets();
@@ -522,7 +522,7 @@ function selectBets(){
             } else {
                 alert("You don't have enough money to make this bet!");
             }
-            
+
         }
     }
 
@@ -768,8 +768,8 @@ function selectBets(){
     showBets(position, betValues);
 
     //Update HTML Information
-    document.getElementById("Stack").innerHTML = userStack;
-    document.getElementById("CurrentBet").innerHTML = currentBet;
+    document.getElementsByClassName("better-stack")[0].textContent = `Stack: $${userStack}`;
+    document.getElementsByClassName("current-bet-amount")[0].textContent = `Current Bet: $${currentBet}`;
 
 
 }

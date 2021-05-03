@@ -2,6 +2,8 @@
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="blackjack.css">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&display=swap" rel="stylesheet">
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
 <title>Blackjack</title>
 
@@ -53,28 +55,19 @@ Oops ... your browser doesn't support the HTML5 canvas element
 </canvas>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 <button onclick="initialSetup()">Start New Game</button>
 <button onclick="clearBets()">Clear All Bets</button>
 <button onclick="removeLastBet()">Remove Last Bet</button>
 <button onclick="dealHand()">Deal Hand</button>
-
-<p id="Name"></p>
-<p id="Stack"></p>
-<p id="CurrentBet"></p>
 =======
-<div class="content-divider">
-  <hr class="dashed">
-</div>
+>>>>>>> 2942b43... added styling + additional stuff for rebase
 
 
-<div class="start-button-container">
-  <button class="start-button" onclick="initialSetup()">Start New Game</button>
-</div>
 
 <div class="content-divider">
   <hr class="dashed">
 </div>
-
 
 <div class="interface">
   <div class="interface--title">
@@ -85,8 +78,9 @@ Oops ... your browser doesn't support the HTML5 canvas element
   <div
     class="interface--bet-info"
   >
-  <p class="better-name" id="Name">Name: </p>
-  <p class="better-stack" id="Stack">Stack: </p>
+  <p class="better-name">Name: </p>
+  <p class="better-stack">Stack: </p>
+  <p class="current-bet-amount">Current Bet Amount: </p>
   </div>
 </div>
 
@@ -94,7 +88,21 @@ Oops ... your browser doesn't support the HTML5 canvas element
   <hr class="dashed">
 </div>
 
->>>>>>> f74933f... added HTML
+
+<div class="actions-container">
+  <button class="start-button" onclick="initialSetup()">Start New Game</button>
+  <button class="clear-all-bets" onclick="clearBets()">Clear All Bets</button>
+  <button class="remove-last-bet" onclick="removeLastBet()">Remove Last Bet</button>
+</div>
+
+<div class="content-divider">
+  <hr class="dashed">
+</div>
+
+<div class="page-footer">
+  <footer> <small>&copy; Copyright 2021, Jack Morgan, Sean Gay, Sean Crotty</small> </footer>
+</div>
+
 
 </body>
 </html>
