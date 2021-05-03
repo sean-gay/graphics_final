@@ -10,7 +10,6 @@ var canvas;
 
 // Initial Setup Info
 var Name;
-var userStack;
 
 // Chips 
 var chipVertices;
@@ -44,6 +43,9 @@ var scalingMarkerTen = .03;
 var scalingOutTwoFive = .2;
 var scalingMarkerTwoFive = .03;
 
+// Selection bouncing
+var isClicked = false;
+
 // Bets
 var position = 0;
 var betScaleOut = .1;
@@ -54,6 +56,10 @@ var betAreaColor = vec3(255/255, 230/255, 0/255);
 var feltColor = vec3(27/255, 149/255, 27/255);
 var betAreaWideVertices;
 var betAreaTallVertices;
+var currentBet = 0;
+var userStack;
+var originalStack;
+
 
 // Cards 
 var card;
@@ -112,6 +118,14 @@ function initialSetup(){
     }
     document.getElementById("Stack").innerHTML = userStack;
     alert("\t\t\tSelect Your Bets! \n(White = $1, Red = $5, Blue = $10, Black = $25) \n\t\t\t (Up To 5 Chips)");
+
+    originalStack = userStack;
+
+    //Set inital bet information in HTML
+    currentBet = 0;
+    document.getElementById("CurrentBet").innerHTML = currentBet;
+
+    //Update Game State
     state = 1;
 }
 
@@ -397,7 +411,9 @@ function selectBets(){
         2*(canvas.height - (event.clientY - event.target.getBoundingClientRect().top))/canvas.height - 1);
     
         if ( (chipXCenterOne - .15 <= t[0]) && (t[0] <=  chipXCenterOne + .15) && (t[1] <=  chipYCenterOne + .15) && (t[1] >=  chipYCenterOne - .15) ){
-            chipMoveOne = true;
+            if (userStack - 1 >= 0){
+                chipMoveOne = true;
+            }
         }
 
         if ( (chipXCenterFive - .15 <= t[0]) && (t[0] <=  chipXCenterFive + .15) && (t[1] <=  chipYCenterFive + .15) && (t[1] >=  chipYCenterFive - .15) ){
@@ -445,8 +461,16 @@ function selectBets(){
             chipMoveOne = false;
             scalingOutOne = .2;
             scalingMarkerOne = .03;
-            position += 1;
-            betValues.push(1);
+
+            //update bets and check if error
+            if (userStack - 1 >= 0){
+                userStack -= 1;
+                currentBet += 1;
+                position += 1;
+                betValues.push(1);
+            } else {
+                alert("You don't have enough money to make this bet!");
+            }
         }
     }
 
@@ -487,8 +511,17 @@ function selectBets(){
             chipMoveFive = false;
             scalingOutFive = .2;
             scalingMarkerFive = .03;
-            position += 1;
-            betValues.push(5);
+
+            //update bets and check if error
+            if (userStack - 5 >= 0){
+                userStack -= 5;
+                currentBet += 5;
+                position += 1;
+                betValues.push(5);
+            } else {
+                alert("You don't have enough money to make this bet!");
+            }
+            
         }
     }
 
@@ -522,8 +555,16 @@ function selectBets(){
             chipMoveTen = false;
             scalingOutTen = .2;
             scalingMarkerTen = .03;
-            position += 1;
-            betValues.push(10);
+
+            //update bets and check if error
+            if (userStack - 10 >= 0){
+                userStack -= 10;
+                currentBet += 10;
+                position += 1;
+                betValues.push(10);
+            } else {
+                alert("You don't have enough money to make this bet!");
+            }
         }
     }
 
@@ -563,8 +604,16 @@ function selectBets(){
             chipMoveTwoFive = false;
             scalingOutTwoFive = .2;
             scalingMarkerTwoFive = .03;
-            position += 1;
-            betValues.push(25);
+
+            //update bets and check if error
+            if (userStack - 25 >= 0){
+                userStack -= 25;
+                currentBet += 25;
+                position += 1;
+                betValues.push(25);
+            } else {
+                alert("You don't have enough money to make this bet!");
+            }
         }
     }
 
@@ -716,18 +765,28 @@ function selectBets(){
         gl.drawArrays( gl.TRIANGLE_FAN, 74, 6);
     }
     showBets(position, betValues);
+
+    //Update HTML Information
+    document.getElementById("Stack").innerHTML = userStack;
+    document.getElementById("CurrentBet").innerHTML = currentBet;
+
+
 }
 
 // Bet Resetting functions from button push
 function clearBets(){
     position = 0;
     betValues = [];
+    currentBet = 0;
+    userStack = originalStack;
 }
 
 function removeLastBet(){
     if (position > 0) {
         position -= 1;
-        betValues.pop();
+        var previousBetVal = betValues.pop();
+        currentBet -= previousBetVal;
+        userStack += previousBetVal;
     }
 }
 
