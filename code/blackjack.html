@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" type="text/css" href="blackjack.css">
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
 <title>Blackjack</title>
 
@@ -38,13 +39,20 @@ main()
 </head>
 
 <body>
+  <div class="title">
+    <h1>
+      WebGL Blackjack
+    </h1>
+  </div>
 <!--- Create a drawing surface --->
 <!--- The canvas id can be referred to in the application file gasket1.js --->
 <canvas id="gl-canvas" width="512" height="512">
+  <!--  -->
 <!--- The following message is displayed if the browser doesn't support HTML5 --->
 Oops ... your browser doesn't support the HTML5 canvas element
 </canvas>
 
+<<<<<<< HEAD
 <button onclick="initialSetup()">Start New Game</button>
 <button onclick="clearBets()">Clear All Bets</button>
 <button onclick="removeLastBet()">Remove Last Bet</button>
@@ -53,7 +61,40 @@ Oops ... your browser doesn't support the HTML5 canvas element
 <p id="Name"></p>
 <p id="Stack"></p>
 <p id="CurrentBet"></p>
+=======
+<div class="content-divider">
+  <hr class="dashed">
+</div>
+
+
+<div class="start-button-container">
+  <button class="start-button" onclick="initialSetup()">Start New Game</button>
+</div>
+
+<div class="content-divider">
+  <hr class="dashed">
+</div>
+
+
+<div class="interface">
+  <div class="interface--title">
+    <h2>
+      Bet Info
+    </h2>
+  </div>
+  <div
+    class="interface--bet-info"
+  >
+  <p class="better-name" id="Name">Name: </p>
+  <p class="better-stack" id="Stack">Stack: </p>
+  </div>
+</div>
+
+<div class="content-divider">
+  <hr class="dashed">
+</div>
+
+>>>>>>> f74933f... added HTML
 
 </body>
 </html>
-

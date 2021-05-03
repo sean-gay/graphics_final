@@ -1,0 +1,66 @@
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+body .content-divider {
+  display: flex;
+  flex-direction: column;
+  width: 512px;
+}
+
+body .content-divider hr.dashed {
+  border-top: 3px dashed #bbb;
+  border-bottom: none;
+  border-left: none;
+  border-right: none;
+  width: 100%;
+}
+
+body canvas {
+  width: 512px;
+  height: 512px;
+  border-radius: 5px;
+}
+
+body .title {
+  text-align: center;
+  width: 512px;
+}
+
+body .start-button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 512px;
+}
+
+body .start-button-container .start-button {
+  transition-duration: 0.4s;
+  background-color: white;
+  color: black;
+  border: 2px solid #4CAF50; /* Green */
+  border-radius: 2px;
+  width: 25%;
+  padding: 5px;
+  margin: 10px 0px 10px 0px;
+}
+
+body .interface {
+  width: 512px;
+  display: flex;
+  flex-direction: column;
+}
+
+body .interface .interface--title {
+  text-align: center;
+}
+
+body .interface .interface--title h2 {
+  margin-bottom: 0px;
+}
+
+body .interface .interface--bet-area{
+
+}

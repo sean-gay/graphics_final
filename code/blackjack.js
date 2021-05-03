@@ -11,7 +11,7 @@ var canvas;
 // Initial Setup Info
 var Name;
 
-// Chips 
+// Chips
 var chipVertices;
 var markerVertices;
 var chipOnePrimary;
@@ -61,7 +61,7 @@ var userStack;
 var originalStack;
 
 
-// Cards 
+// Cards
 var card;
 
 // Gameplay
@@ -79,7 +79,7 @@ window.onload = function init(){
 
     // Setup Chips
     createChips();
-    
+
     var program = initShaders( gl, "vertex-shader", "fragment-shader" );
     gl.useProgram( program );
 
@@ -104,19 +104,19 @@ function initialSetup(){
     Name = prompt("Username:", "Enter Name");
     if (Name == null || Name == "") {
       Name = "User"
-    } 
-    document.getElementById("Name").innerHTML = Name;
-    
+    }
+    document.getElementsByClassName("better-name")[0].textContent = `Name: ${Name}`//"Name: " + Name.toString();
+
     userStack = -1;
     while (userStack > 100 || userStack < 10){
         var userStackInput = prompt("Starting Stack", "(10 - 100, Whole Dollars)");
         while(isNaN(userStackInput)){
             console.log("not a number");
             userStackInput = prompt("Starting Stack", "(10 - 100, Whole Dollars)");
-        } 
+        }
         userStack = parseInt(userStackInput);
     }
-    document.getElementById("Stack").innerHTML = userStack;
+    document.getElementById("Stack").innerHTML = `Stack: $${userStack}`; //userStack;
     alert("\t\t\tSelect Your Bets! \n(White = $1, Red = $5, Blue = $10, Black = $25) \n\t\t\t (Up To 5 Chips)");
 
     originalStack = userStack;
@@ -196,7 +196,7 @@ function createChips(){
 
     chipVertices.push(...betAreaTallVertices);
 
-    // Corner 
+    // Corner
     var k = vec2(0.0, 0.0);
     var cornerVerts = [k];
     var radius = 1;
@@ -214,7 +214,7 @@ function createChips(){
 
 
 
-    // Set Colors 
+    // Set Colors
     // 1 - white/blue
     chipOnePrimary = vec3(1.0, 1.0, 1.0);
     chipOneSecondary = vec3(20/255, 20/255, 175/255);
@@ -247,7 +247,7 @@ function createBetArea(){
 
     pm = ortho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
 
-    //Outside Wide Rectangle - Yellow 
+    //Outside Wide Rectangle - Yellow
     betAreaOutsideWideMat = mat4();
     tm = translate(0.9, -1, 0.0);
     betAreaOutsideWideMat = mult(tm, betAreaOutsideWideMat);
@@ -256,7 +256,7 @@ function createBetArea(){
     gl.uniformMatrix4fv(u_ctMatrixLoc, false, flatten(betAreaOutsideWideMat));
     gl.drawArrays( gl.TRIANGLE_FAN, 80, 6);
 
-    //Outside Tall Rectangle - Yellow 
+    //Outside Tall Rectangle - Yellow
     betAreaOutsideTallMat = mat4();
     tm = translate(0.9, -1, 0.0);
     betAreaOutsideTallMat = mult(tm, betAreaOutsideTallMat);
@@ -278,7 +278,7 @@ function createBetArea(){
     gl.uniformMatrix4fv(u_ctMatrixLoc, false, flatten(betAreaOutsideCornerMat));
     gl.drawArrays( gl.TRIANGLE_FAN, 92, 20);
 
-    //Inside Wide Rectangle - Green 
+    //Inside Wide Rectangle - Green
     betAreaInsideWideMat = mat4();
     tm = translate(0.93, -1.03, 0.0);
     betAreaInsideWideMat = mult(tm, betAreaInsideWideMat);
@@ -287,7 +287,7 @@ function createBetArea(){
     gl.uniformMatrix4fv(u_ctMatrixLoc, false, flatten(betAreaInsideWideMat));
     gl.drawArrays( gl.TRIANGLE_FAN, 80, 6);
 
-    //Inside Tall Rectangle - Green 
+    //Inside Tall Rectangle - Green
     betAreaInsideTallMat = mat4();
     tm = translate(0.93, -1.03, 0.0);
     betAreaInsideTallMat = mult(tm, betAreaInsideTallMat);
@@ -324,7 +324,7 @@ function showBets(position, betValues){
     var centerBetY;
     var colorBetPrimary = vec3();
     var colorBetSecondary = vec3();
- 
+
     var translationX;
     var translationY;
 
@@ -341,7 +341,7 @@ function showBets(position, betValues){
             centerBetY = 0;
         } else if (i == 5){
             centerBetY = 0.3;
-        }   
+        }
 
         if (betValues[i - 1] == 1){
             colorBetPrimary = chipOnePrimary;
@@ -361,7 +361,7 @@ function showBets(position, betValues){
         theta = 0.0; // in degree
         trans = 0;
         translationX = centerBetX;
-        translationY = centerBetY; 
+        translationY = centerBetY;
         sm = scalem(betScaleOut, betScaleOut, betScaleOut);
         rm = rotateZ(theta);
         tm = translate(translationX, translationY, 0.0);
@@ -372,7 +372,7 @@ function showBets(position, betValues){
         gl.uniform3fv( u_ColorLoc, colorBetPrimary );
         gl.uniformMatrix4fv(u_ctMatrixLoc, false, flatten(matBet));
         gl.drawArrays( gl.TRIANGLE_FAN, 0, 74);
-        // One Dollar Markers 
+        // One Dollar Markers
         theta = 0;
         var chipMarkers;
         for (var k = 0; k < 8; k++){
@@ -398,7 +398,7 @@ function showBets(position, betValues){
 // The Initial Game State
 // User can pick bets
 function selectBets(){
-    //Draw Chips 
+    //Draw Chips
     var trans;
     var tm, sm, rm, pm;
     var translationX;
@@ -410,7 +410,7 @@ function selectBets(){
     canvas.addEventListener("mousedown", function(event){
         var t = vec2(2*(event.clientX - event.target.getBoundingClientRect().left)/canvas.width - 1,
         2*(canvas.height - (event.clientY - event.target.getBoundingClientRect().top))/canvas.height - 1);
-    
+
         if ( (chipXCenterOne - .15 <= t[0]) && (t[0] <=  chipXCenterOne + .15) && (t[1] <=  chipYCenterOne + .15) && (t[1] >=  chipYCenterOne - .15) ){
             if (userStack - 1 >= 0){
                 chipMoveOne = true;
@@ -505,7 +505,7 @@ function selectBets(){
         } else {
             chipXCenterFive += .01;
         }
-        
+
         if (chipXCenterFive > .9){
             chipXCenterFive = 0.5;
             chipYCenterFive = 0.5;
@@ -623,7 +623,7 @@ function selectBets(){
     theta = 0.0; // in degree
     trans = 0;
     translationX = chipXCenterOne;
-    translationY = chipYCenterOne; 
+    translationY = chipYCenterOne;
     sm = scalem(scalingOutOne, scalingOutOne, scalingOutOne);
     rm = rotateZ(theta);
     tm = translate(translationX, translationY, 0.0);
@@ -634,7 +634,7 @@ function selectBets(){
     gl.uniform3fv( u_ColorLoc, chipOnePrimary );
     gl.uniformMatrix4fv(u_ctMatrixLoc, false, flatten(matOne));
     gl.drawArrays( gl.TRIANGLE_FAN, 0, 74);
-    // One Dollar Markers 
+    // One Dollar Markers
     theta = 0;
     var chipMarkers;
     for (var i = 0; i < 8; i++){
@@ -660,7 +660,7 @@ function selectBets(){
     theta = 0.0; // in degree
     trans = 0;
     translationX = chipXCenterFive;
-    translationY = chipYCenterFive; 
+    translationY = chipYCenterFive;
     sm = scalem(scalingOutFive, scalingOutFive, scalingOutFive);
     rm = rotateZ(theta);
     tm = translate(translationX, translationY, 0.0);
@@ -671,7 +671,7 @@ function selectBets(){
     gl.uniform3fv( u_ColorLoc, chipFivePrimary );
     gl.uniformMatrix4fv(u_ctMatrixLoc, false, flatten(matFive));
     gl.drawArrays( gl.TRIANGLE_FAN, 0, 74);
-    // Five Dollar Markers 
+    // Five Dollar Markers
     theta = 0;
     var chipMarkers;
     for (var i = 0; i < 8; i++){
@@ -697,7 +697,7 @@ function selectBets(){
     theta = 0.0; // in degree
     trans = 0;
     translationX = chipXCenterTen;
-    translationY = chipYCenterTen; 
+    translationY = chipYCenterTen;
     sm = scalem(scalingOutTen, scalingOutTen, scalingOutTen);
     rm = rotateZ(theta);
     tm = translate(translationX, translationY, 0.0);
@@ -708,7 +708,7 @@ function selectBets(){
     gl.uniform3fv( u_ColorLoc, chipTenPrimary );
     gl.uniformMatrix4fv(u_ctMatrixLoc, false, flatten(matTen));
     gl.drawArrays( gl.TRIANGLE_FAN, 0, 74);
-    // Ten Dollar Markers 
+    // Ten Dollar Markers
     theta = 0;
     var chipMarkers;
     for (var i = 0; i < 8; i++){
@@ -734,7 +734,7 @@ function selectBets(){
     theta = 0.0; // in degree
     trans = 0;
     translationX = chipXCenterTwoFive;
-    translationY = chipYCenterTwoFive; 
+    translationY = chipYCenterTwoFive;
     sm = scalem(scalingOutTwoFive, scalingOutTwoFive, scalingOutTwoFive);
     rm = rotateZ(theta);
     tm = translate(translationX, translationY, 0.0);
@@ -745,7 +745,7 @@ function selectBets(){
     gl.uniform3fv( u_ColorLoc, chipTwoFivePrimary );
     gl.uniformMatrix4fv(u_ctMatrixLoc, false, flatten(matTwoFive));
     gl.drawArrays( gl.TRIANGLE_FAN, 0, 74);
-    // TwoFive Dollar Markers 
+    // TwoFive Dollar Markers
     theta = 0;
     var chipMarkers;
     for (var i = 0; i < 8; i++){
