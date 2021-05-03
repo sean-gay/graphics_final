@@ -51,6 +51,9 @@ var betScaleMarker = .015;
 var betValues = [];
 var betAreaMat;
 var betAreaColor = vec3(255/255, 230/255, 0/255);
+var feltColor = vec3(27/255, 149/255, 27/255);
+var betAreaWideVertices;
+var betAreaTallVertices;
 
 // Cards 
 var card;
@@ -139,7 +142,7 @@ function createChips(){
         chipVertices.push(vec2(Math.cos(theta+increment)*radius, Math.sin(theta+increment)*radius));
     }
 
-    // Generic Rectangle 
+    // Generic Rectangle for chips
     markerVertices = [
         vec2(-1.5, 0.25),
         vec2(-1.5, -0.25),
@@ -151,6 +154,50 @@ function createChips(){
     ];
 
     chipVertices.push(...markerVertices);
+
+    // Make Bet Area from 2 rectangles and 4 parts of a circle
+    // Wide Area One
+    betAreaWideVertices = [
+        vec2(-0.15, 0.0),
+        vec2(-0.15, 1.4),
+        vec2(0.15, 0),
+
+        vec2(0.15, 0),
+        vec2(0.15, 1.4),
+        vec2(-0.15, 1.4)
+    ]
+    chipVertices.push(...betAreaWideVertices);
+
+    // Tall Area One
+    betAreaTallVertices = [
+        vec2(-0.1, 0.0),
+        vec2(-0.1, 1.45),
+        vec2(0.1, 0),
+
+        vec2(0.1, 0),
+        vec2(0.1, 1.45),
+        vec2(-0.1, 1.45)
+    ]
+
+    chipVertices.push(...betAreaTallVertices);
+
+    // Corner 
+    var k = vec2(0.0, 0.0);
+    var cornerVerts = [k];
+    var radius = 1;
+    var increment = Math.PI/36;
+
+    for (var theta =  0.0; theta < Math.PI*2 - increment; theta += increment){
+        if(theta == 0.0){
+            cornerVerts.push(vec2(Math.cos(theta)*radius, Math.sin(theta)*radius));
+        }
+        cornerVerts.push(vec2(Math.cos(theta+increment)*radius, Math.sin(theta+increment)*radius));
+    }
+    console.log(cornerVerts.length)
+
+    chipVertices.push(...cornerVerts);
+
+
 
     // Set Colors 
     // 1 - white/blue
@@ -174,17 +221,45 @@ function createChips(){
 // Creates bet area
 function createBetArea(){
     var tm, sm, rm, pm;
-    betAreaMat = mat4();
-    tm = translate(0.0, 0.0, 0.0);
-    sm = scalem(1, 1, 1);
+    var betAreaInsideMat;
+    var betAreaOutsideWideMat;
+    var betAreaOutsideTallMat;
+    var betAreaCornerMat;
     pm = ortho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
-    //rm = rotateZ(theta);
-    betAreaMat = mult(sm, betAreaMat);
-    betAreaMat = mult(tm, betAreaMat);
-    betAreaMat = mult(pm, betAreaMat);
+
+    //Outside Wide Rectangle - Yellow 
+    betAreaOutsideWideMat = mat4();
+    tm = translate(0.9, -1, 0.0);
+    betAreaOutsideWideMat = mult(tm, betAreaOutsideWideMat);
+    betAreaOutsideWideMat = mult(pm, betAreaOutsideWideMat);
     gl.uniform3fv( u_ColorLoc, betAreaColor );
-    gl.uniformMatrix4fv(u_ctMatrixLoc, false, flatten(betAreaMat));
-    gl.drawArrays( gl.TRIANGLE_FAN, 74, 6);
+    gl.uniformMatrix4fv(u_ctMatrixLoc, false, flatten(betAreaOutsideWideMat));
+    gl.drawArrays( gl.TRIANGLE_FAN, 80, 6);
+
+    //Outside Tall Rectangle - Yellow 
+    betAreaOutsideTallMat = mat4();
+    tm = translate(0.9, -1, 0.0);
+    betAreaOutsideTallMat = mult(tm, betAreaOutsideTallMat);
+    betAreaOutsideTallMat = mult(pm, betAreaOutsideTallMat);
+    gl.uniform3fv( u_ColorLoc, betAreaColor );
+    gl.uniformMatrix4fv(u_ctMatrixLoc, false, flatten(betAreaOutsideTallMat));
+    gl.drawArrays( gl.TRIANGLE_FAN, 86, 6);
+
+    // Outside Corner
+    betAreaCornerMat = mat4();
+    tm = translate(0.8, 0.40, 0.0);
+    sm = scalem(0.05, 0.05, 1.0);
+    rm = rotateZ(90);
+    betAreaCornerMat = mult(sm, betAreaCornerMat);
+    betAreaCornerMat = mult(rm, betAreaCornerMat);
+    betAreaCornerMat = mult(tm, betAreaCornerMat);
+    betAreaCornerMat = mult(pm, betAreaCornerMat);
+    gl.uniform3fv( u_ColorLoc, betAreaColor );
+    gl.uniformMatrix4fv(u_ctMatrixLoc, false, flatten(betAreaCornerMat));
+    gl.drawArrays( gl.TRIANGLE_FAN, 92, 20);
+
+    
+
 }
 
 
@@ -359,15 +434,15 @@ function selectBets(){
             scalingOutFive /= 1.009;
             scalingMarkerFive /= 1.009;
         } else if (position == 3){
-            chipXCenterFive += .01 / (0.5 / 0.4);
-            chipYCenterFive -= (.01);
-            scalingOutFive /= 1.016;
-            scalingMarkerFive /= 1.016;
+            chipXCenterFive += .008 / (0.5 / 0.4);
+            chipYCenterFive -= (.008);
+            scalingOutFive /= 1.012;
+            scalingMarkerFive /= 1.012;
         } else if (position == 4){
-            chipXCenterFive += .01 / (.2 / 0.4);
-            chipYCenterFive -= (.01);
-            scalingOutFive /= 1.04;
-            scalingMarkerFive /= 1.04;
+            chipXCenterFive += .005 / (.2 / 0.4);
+            chipYCenterFive -= (.005);
+            scalingOutFive /= 1.018;
+            scalingMarkerFive /= 1.018;
         } else {
             chipXCenterFive += .01;
         }
