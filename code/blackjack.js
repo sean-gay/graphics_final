@@ -126,6 +126,7 @@ function initialSetup(){
     document.getElementById("CurrentBet").innerHTML = currentBet;
 
     //Update Game State
+    clearBets();
     state = 1;
 }
 
@@ -790,12 +791,27 @@ function removeLastBet(){
     }
 }
 
+function dealHand(){
+    if (currentBet > 0){
+        state = 2;
+    } else {
+        alert("You must place a bet first!");
+    }
+}
+
+function prepareForHand(){
+    gl.clear( gl.COLOR_BUFFER_BIT );
+
+}
+
 function render() {
     gl.clear( gl.COLOR_BUFFER_BIT );
 
     if (state == 1){
         createBetArea();
         selectBets();
+    } else if (state == 2){
+        prepareForHand();
     }
     window.requestAnimFrame(render);
 }
