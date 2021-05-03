@@ -296,6 +296,7 @@ function createBetArea(){
 }
 
 
+
 function showBets(position, betValues){
     if (position == 0){
         return;
@@ -717,6 +718,18 @@ function selectBets(){
     showBets(position, betValues);
 }
 
+// Bet Resetting functions from button push
+function clearBets(){
+    position = 0;
+    betValues = [];
+}
+
+function removeLastBet(){
+    if (position > 0) {
+        position -= 1;
+        betValues.pop();
+    }
+}
 
 function render() {
     gl.clear( gl.COLOR_BUFFER_BIT );
