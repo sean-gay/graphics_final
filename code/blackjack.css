@@ -38,7 +38,7 @@ body .actions-container {
   display: flex;
   flex-flow: row wrap;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: space-between;
   width: 512px;
   padding: 3px;
 }
@@ -48,14 +48,19 @@ body .actions-container button {
   background-color: white;
   color: black;
   border-radius: 4px;
-  width: 25%;
-  padding: 5px;
+  width: 20%;
+  padding: 3px;
   margin: 10px 5px 10px 5px;
   font-size: 15px;
 }
 
 body .actions-container button:hover {
   cursor: pointer;
+}
+
+body .actions-container .right-arrow {
+  //font-size: 25px;
+  margin: 0;
 }
 
 
@@ -89,6 +94,16 @@ body .actions-container .remove-last-bet:hover {
   color: white;
 }
 
+body .actions-container .deal-hand {
+  border: 2px solid #12c7db; /* Blue */
+}
+
+body .actions-container .deal-hand:hover {
+  border: 2px solid #12c7db; /* Blue */
+  background-color: #12c7db;
+  color: white;
+}
+
 body .interface {
   width: 512px;
   display: flex;
@@ -103,7 +118,7 @@ body .interface .interface--title h2 {
   margin: 0px;
 }
 
-body .interface .interface--bet-area{
+body .interface .interface--bet-area {
 
 }
 
