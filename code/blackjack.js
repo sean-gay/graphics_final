@@ -155,7 +155,7 @@ function createChips(){
 
     chipVertices.push(...markerVertices);
 
-    // Make Bet Area from 2 rectangles and 4 parts of a circle
+    // Make Bet Area from 2 rectangles and 1 part of a circle
     // Wide Area One
     betAreaWideVertices = [
         vec2(-0.15, 0.0),
@@ -228,7 +228,7 @@ function createBetArea(){
 
     var betAreaInsideWideMat;
     var betAreaInsideTallMat;
-    var betAreaCornerMat;
+    var betAreaInsideCornerMat;
 
     pm = ortho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
 
@@ -263,17 +263,36 @@ function createBetArea(){
     gl.uniformMatrix4fv(u_ctMatrixLoc, false, flatten(betAreaOutsideCornerMat));
     gl.drawArrays( gl.TRIANGLE_FAN, 92, 20);
 
-    //Outside Wide Rectangle - Yellow 
+    //Inside Wide Rectangle - Green 
     betAreaInsideWideMat = mat4();
-    tm = translate(0.9, -1, 0.0);
-    sm = scalem(1.0, 0.9, 1.0);
-    betAreaInsideWideMat = mult(sm, betAreaInsideWideMat);
+    tm = translate(0.93, -1.03, 0.0);
     betAreaInsideWideMat = mult(tm, betAreaInsideWideMat);
     betAreaInsideWideMat = mult(pm, betAreaInsideWideMat);
     gl.uniform3fv( u_ColorLoc, feltColor );
     gl.uniformMatrix4fv(u_ctMatrixLoc, false, flatten(betAreaInsideWideMat));
     gl.drawArrays( gl.TRIANGLE_FAN, 80, 6);
 
+    //Inside Tall Rectangle - Green 
+    betAreaInsideTallMat = mat4();
+    tm = translate(0.93, -1.03, 0.0);
+    betAreaInsideTallMat = mult(tm, betAreaInsideTallMat);
+    betAreaInsideTallMat = mult(pm, betAreaInsideTallMat);
+    gl.uniform3fv( u_ColorLoc, feltColor );
+    gl.uniformMatrix4fv(u_ctMatrixLoc, false, flatten(betAreaInsideTallMat));
+    gl.drawArrays( gl.TRIANGLE_FAN, 86, 6);
+
+    // Inside Corner - Yellow
+    betAreaInsideCornerMat = mat4();
+    tm = translate(0.83, 0.37, 0.0);
+    sm = scalem(0.05, 0.05, 1.0);
+    rm = rotateZ(90);
+    betAreaInsideCornerMat = mult(sm, betAreaInsideCornerMat);
+    betAreaInsideCornerMat = mult(rm, betAreaInsideCornerMat);
+    betAreaInsideCornerMat = mult(tm, betAreaInsideCornerMat);
+    betAreaInsideCornerMat = mult(pm, betAreaInsideCornerMat);
+    gl.uniform3fv( u_ColorLoc, feltColor );
+    gl.uniformMatrix4fv(u_ctMatrixLoc, false, flatten(betAreaInsideCornerMat));
+    gl.drawArrays( gl.TRIANGLE_FAN, 92, 20);
 }
 
 
