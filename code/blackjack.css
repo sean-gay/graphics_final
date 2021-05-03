@@ -1,6 +1,8 @@
 body {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 body .content-divider {
@@ -42,9 +44,10 @@ body .start-button-container .start-button {
   color: black;
   border: 2px solid #4CAF50; /* Green */
   border-radius: 2px;
-  width: 25%;
+  width: 33%;
   padding: 5px;
   margin: 10px 0px 10px 0px;
+  font-size: 20px;
 }
 
 body .interface {
