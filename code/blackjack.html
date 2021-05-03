@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" type="text/css" href="blackjack.css">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&display=swap" rel="stylesheet">
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
 <title>Blackjack</title>
 
@@ -38,22 +41,62 @@ main()
 </head>
 
 <body>
+  <div class="title">
+    <h1>
+      WebGL Blackjack
+    </h1>
+  </div>
 <!--- Create a drawing surface --->
 <!--- The canvas id can be referred to in the application file gasket1.js --->
 <canvas id="gl-canvas" width="512" height="512">
+  <!--  -->
 <!--- The following message is displayed if the browser doesn't support HTML5 --->
 Oops ... your browser doesn't support the HTML5 canvas element
 </canvas>
 
-<button onclick="initialSetup()">Start New Game</button>
-<button onclick="clearBets()">Clear All Bets</button>
-<button onclick="removeLastBet()">Remove Last Bet</button>
-<button onclick="dealHand()">Deal Hand</button>
 
-<p id="Name"></p>
-<p id="Stack"></p>
-<p id="CurrentBet"></p>
+
+
+
+<div class="content-divider">
+  <hr class="dashed">
+</div>
+
+<div class="interface">
+  <div class="interface--title">
+    <h2>
+      Bet Info
+    </h2>
+  </div>
+  <div
+    class="interface--bet-info"
+  >
+  <p class="better-name">Name: </p>
+  <p class="better-stack">Stack: </p>
+  <p class="current-bet-amount">Current Bet Amount: </p>
+  </div>
+</div>
+
+<div class="content-divider">
+  <hr class="dashed">
+</div>
+
+
+<div class="actions-container">
+  <button class="start-button" onclick="initialSetup()">Start New Game</button>
+  <button class="clear-all-bets" onclick="clearBets()">Clear All Bets</button>
+  <button class="remove-last-bet" onclick="removeLastBet()">Remove Last Bet</button>
+  <button class="deal-hand" onclick="dealHand()">Deal Hand --></button>
+</div>
+
+<div class="content-divider">
+  <hr class="dashed">
+</div>
+
+<div class="page-footer">
+  <footer> <small>&copy; Copyright 2021, Jack Morgan, Sean Gay, Sean Crotty</small> </footer>
+</div>
+
 
 </body>
 </html>
-
