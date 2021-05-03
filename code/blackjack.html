@@ -46,56 +46,70 @@ main()
       WebGL Blackjack
     </h1>
   </div>
-<!--- Create a drawing surface --->
-<!--- The canvas id can be referred to in the application file gasket1.js --->
-<canvas id="gl-canvas" width="512" height="512">
-  <!--  -->
-<!--- The following message is displayed if the browser doesn't support HTML5 --->
-Oops ... your browser doesn't support the HTML5 canvas element
-</canvas>
+  <div
+    class="main-content"
+  >
+  <div
+    class="actions-view"
+  >
+  <!--- Create a drawing surface --->
+  <!--- The canvas id can be referred to in the application file gasket1.js --->
+  <canvas id="gl-canvas" width="512" height="512">
+    <!--  -->
+  <!--- The following message is displayed if the browser doesn't support HTML5 --->
+  Oops ... your browser doesn't support the HTML5 canvas element
+  </canvas>
 
+  <div class="content-divider">
+    <hr class="dashed">
+  </div>
 
+  <div class="actions-container">
+    <button class="start-button" onclick="initialSetup()">Start New Game</button>
+    <button class="remove-last-bet" onclick="removeLastBet()">Remove Last Bet</button>
+    <button class="clear-all-bets" onclick="clearBets()">Clear All Bets</button>
+    <button class="deal-hand" onclick="dealHand()">Deal Hand &#65293;&#65293;> </button>
+  </div>
 
-
-
-<div class="content-divider">
-  <hr class="dashed">
-</div>
-
-<div class="interface">
-  <div class="interface--title">
-    <h2>
-      Bet Info
-    </h2>
   </div>
   <div
-    class="interface--bet-info"
+    class="stats-view"
   >
-  <p class="better-name">Name: </p>
-  <p class="better-stack">Stack: </p>
-  <p class="current-bet-amount">Current Bet Amount: </p>
+  <div class="interface">
+    <div class="interface--instructions">
+      <h2>
+        Instructions
+      </h2>
+      <p
+        class="instructions-text"
+      >
+        To start a game, simply press the "Start new Game" button.  The game has two screens, one where you place your bet, and one where you can view the results of the current hand.  Place a bet by clicking on the chips found on the screen to the left.  Your personal betting info can be found right below these instructions.  Please note that the maximum amount you can bet in one turn is $100 and the maximum number of chips which you can bet at one time is 5 chips.  Good luck!
+      </p>
+    </div>
+    <div class="content-divider">
+      <hr class="dashed">
+    </div>
+    <div class="interface--title">
+      <h2>
+        Bet Info
+      </h2>
+    </div>
+    <div
+      class="interface--bet-info"
+    >
+    <p class="better-name">Name: </p>
+    <p class="better-stack">Stack: </p>
+    <p class="current-bet-amount">Current Bet: </p>
+    </div>
   </div>
-</div>
 
-<div class="content-divider">
-  <hr class="dashed">
-</div>
+  </div>
 
 
-<div class="actions-container">
-  <button class="start-button" onclick="initialSetup()">Start New Game</button>
-  <button class="clear-all-bets" onclick="clearBets()">Clear All Bets</button>
-  <button class="remove-last-bet" onclick="removeLastBet()">Remove Last Bet</button>
-  <button class="deal-hand" onclick="dealHand()">Deal Hand --></button>
-</div>
-
-<div class="content-divider">
-  <hr class="dashed">
-</div>
-
-<div class="page-footer">
-  <footer> <small>&copy; Copyright 2021, Jack Morgan, Sean Gay, Sean Crotty</small> </footer>
-</div>
+  </div>
+  <div class="page-footer">
+    <footer> <small>&copy; Copyright 2021 Jack Morgan, Sean Gay, Sean Crotty</small> </footer>
+  </div>
 
 
 </body>

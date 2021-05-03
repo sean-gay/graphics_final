@@ -9,10 +9,16 @@ body {
   justify-content: center;
 }
 
-body .content-divider {
+body .main-content {
+  display: flex;
+  flex-direction: row;
+}
+
+body .main-content .actions-view .content-divider {
   display: flex;
   flex-direction: column;
-  width: 512px;
+  width: 500px;
+  margin-top: 13px;
 }
 
 body .content-divider hr.dashed {
@@ -32,6 +38,10 @@ body canvas {
 body .title {
   text-align: center;
   width: 512px;
+}
+
+body .title h1 {
+  margin-top: 0px;
 }
 
 body .actions-container {
@@ -59,7 +69,6 @@ body .actions-container button:hover {
 }
 
 body .actions-container .right-arrow {
-  //font-size: 25px;
   margin: 0;
 }
 
@@ -104,8 +113,29 @@ body .actions-container .deal-hand:hover {
   color: white;
 }
 
+body .main-content {
+  max-width: 950px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+body .main-content .actions-view {
+  min-width: 520px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+body .main-content .stats-view {
+    max-width: 35%;
+    display: flex;
+    flex-direction: column;
+    margin-left: 5px;
+}
+
 body .interface {
-  width: 512px;
   display: flex;
   flex-direction: column;
 }
@@ -118,18 +148,31 @@ body .interface .interface--title h2 {
   margin: 0px;
 }
 
-body .interface .interface--bet-area {
+body .main-content .stats-view .interface .interface--bet-info {
+  font-size: 18px;
+}
 
+body .main-content .stats-view .interface .interface--instructions .content-divider {
+  display: flex;
+  max-width: 100% !important;
 }
 
 body .page-footer {
   display: flex;
   flex-direction: column;
-  width: 512px;
+  min-width: 950px;
   justify-content: center;
   align-items: center;
   padding: 10px;
   margin: 10px;
   background-color: #878683;
   border-radius: 5px;
+}
+
+.instructions-text {
+  font-size: 13px;
+}
+
+.interface--instructions h2 {
+  margin: 0px;
 }
