@@ -49,6 +49,8 @@ var position = 0;
 var betScaleOut = .1;
 var betScaleMarker = .015;
 var betValues = [];
+var betAreaMat;
+var betAreaColor = vec3(255/255, 230/255, 0/255);
 
 // Cards 
 var card;
@@ -106,6 +108,7 @@ function initialSetup(){
         userStack = parseInt(userStackInput);
     }
     document.getElementById("Stack").innerHTML = userStack;
+    alert("\t\t\tSelect Your Bets! \n(White = $1, Red = $5, Blue = $10, Black = $25) \n\t\t\t (Up To 5 Chips)");
     state = 1;
 }
 
@@ -167,6 +170,23 @@ function createChips(){
     chipTwoFiveSecondary = vec3(1.0, 1.0, 1.0);
 
 }
+
+// Creates bet area
+function createBetArea(){
+    var tm, sm, rm, pm;
+    betAreaMat = mat4();
+    tm = translate(0.0, 0.0, 0.0);
+    sm = scalem(1, 1, 1);
+    pm = ortho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+    //rm = rotateZ(theta);
+    betAreaMat = mult(sm, betAreaMat);
+    betAreaMat = mult(tm, betAreaMat);
+    betAreaMat = mult(pm, betAreaMat);
+    gl.uniform3fv( u_ColorLoc, betAreaColor );
+    gl.uniformMatrix4fv(u_ctMatrixLoc, false, flatten(betAreaMat));
+    gl.drawArrays( gl.TRIANGLE_FAN, 74, 6);
+}
+
 
 function showBets(position, betValues){
     if (position == 0){
@@ -286,15 +306,30 @@ function selectBets(){
     });
 
     // Update based on position
+    // ONE UPDATES
     if (chipMoveOne == true){
         if (position == 0){
             chipXCenterOne += .01;
             chipYCenterOne -= .01;
+        } else if (position == 1){
+            chipXCenterOne += .01;
+            chipYCenterOne -= (.01) / (14/11);
+        } else if (position == 2){
+            chipXCenterOne += .01;
+            chipYCenterOne -= (.01) / (1.75);
+        } else if (position == 3){
+            chipXCenterOne += .01;
+            chipYCenterOne -= (.01) / (1.4/.5);
+        } else if (position == 4){
+            chipXCenterOne += .01;
+            chipYCenterOne -= (.01) / (1.4/.2);
         } else {
             chipXCenterOne += .01;
         }
-        scalingOutOne /= 1.0052;
-        scalingMarkerOne /= 1.001;
+        scalingOutOne /= 1.005;
+        scalingMarkerOne /= 1.005;
+
+
         if (chipXCenterOne > .9){
             chipXCenterOne = -0.5;
             chipYCenterOne = 0.5;
@@ -306,12 +341,40 @@ function selectBets(){
         }
     }
 
+    // FIVE UPDATES
     if (chipMoveFive == true){
-        chipXCenterFive += .01;
-        scalingOutFive /= 1.001;
-        scalingMarkerFive /= 1.001;
+        if (position == 0){
+            chipXCenterFive += .01 / (1.4 / 0.4);
+            chipYCenterFive -= .01;
+            scalingOutFive /= 1.005;
+            scalingMarkerFive /= 1.005;
+        } else if (position == 1){
+            chipXCenterFive += .01 / (1.1 / 0.4);
+            chipYCenterFive -= (.01);
+            scalingOutFive /= 1.0065;
+            scalingMarkerFive /= 1.0065;
+        } else if (position == 2){
+            chipXCenterFive += .01 / (0.8 / 0.4);
+            chipYCenterFive -= (.01);
+            scalingOutFive /= 1.009;
+            scalingMarkerFive /= 1.009;
+        } else if (position == 3){
+            chipXCenterFive += .01 / (0.5 / 0.4);
+            chipYCenterFive -= (.01);
+            scalingOutFive /= 1.016;
+            scalingMarkerFive /= 1.016;
+        } else if (position == 4){
+            chipXCenterFive += .01 / (.2 / 0.4);
+            chipYCenterFive -= (.01);
+            scalingOutFive /= 1.04;
+            scalingMarkerFive /= 1.04;
+        } else {
+            chipXCenterFive += .01;
+        }
+        
         if (chipXCenterFive > .9){
             chipXCenterFive = 0.5;
+            chipYCenterFive = 0.5;
             chipMoveFive = false;
             scalingOutFive = .2;
             scalingMarkerFive = .03;
@@ -320,12 +383,33 @@ function selectBets(){
         }
     }
 
+    // TEN UPDATES
     if (chipMoveTen == true){
-        chipXCenterTen += .01;
-        scalingOutTen /= 1.001;
-        scalingMarkerTen /= 1.001;
+        if (position == 0){
+            chipXCenterTen += .01;
+            chipYCenterTen -= .01 / (1.4 / 0.4);
+        } else if (position == 1){
+            chipXCenterTen += .01;
+            chipYCenterTen -= (.01) / (1.4 / 0.1);
+        } else if (position == 2){
+            chipXCenterTen += .01;
+            chipYCenterTen += (.01) / (1.4 / 0.2);
+        } else if (position == 3){
+            chipXCenterTen += .01;
+            chipYCenterTen += (.01) / (1.4 / 0.5);
+        } else if (position == 4){
+            chipXCenterTen += .01;
+            chipYCenterTen += (.01) / (1.4 / 0.8);
+        } else {
+            chipXCenterTen += .01;
+        }
+        scalingOutTen /= 1.005;
+        scalingMarkerTen /= 1.005;
+
+
         if (chipXCenterTen > .9){
             chipXCenterTen = -0.5;
+            chipYCenterTen = -0.5;
             chipMoveTen = false;
             scalingOutTen = .2;
             scalingMarkerTen = .03;
@@ -334,12 +418,39 @@ function selectBets(){
         }
     }
 
+    //  TWO FIVE UPDATES
     if (chipMoveTwoFive == true){
-        chipXCenterTwoFive += .01;
-        scalingOutTwoFive /= 1.001;
-        scalingMarkerTwoFive /= 1.001;
+        if (position == 0){
+            chipXCenterTwoFive += .005;
+            chipYCenterTwoFive -= .005;
+            scalingOutTwoFive /= 1.0079;
+            scalingMarkerTwoFive /= 1.0079;
+        } else if (position == 1){
+            chipXCenterTwoFive += .005;
+            chipYCenterTwoFive -= .005 / (0.4 / 0.1);
+            scalingOutTwoFive /= 1.0082;
+            scalingMarkerTwoFive /= 1.0082;
+        } else if (position == 2){
+            chipXCenterTwoFive += .005;
+            chipYCenterTwoFive += (.005) / (0.4 / 0.2);
+            scalingOutTwoFive /= 1.0085;
+            scalingMarkerTwoFive /= 1.0085;
+        } else if (position == 3){
+            chipXCenterTwoFive += .005;
+            chipYCenterTwoFive += (.005) / (0.4 / 0.5);
+            scalingOutTwoFive /= 1.0088;
+            scalingMarkerTwoFive /= 1.0088;
+        } else if (position == 4){
+            chipXCenterTwoFive += .005;
+            chipYCenterTwoFive += (.005) / (0.4 / 0.8);
+            scalingOutTwoFive /= 1.009;
+            scalingMarkerTwoFive /= 1.009;
+        } else {
+            chipXCenterTwoFive += .01;
+        }
         if (chipXCenterTwoFive > .9){
             chipXCenterTwoFive = 0.5;
+            chipYCenterTwoFive = -0.5;
             chipMoveTwoFive = false;
             scalingOutTwoFive = .2;
             scalingMarkerTwoFive = .03;
@@ -371,8 +482,8 @@ function selectBets(){
         chipMarkers = mat4();
         theta -= 45;
         var thetaRadians = theta * Math.PI/180;
-        translationX = (Math.cos(thetaRadians) + (5 * chipXCenterOne))/5;
-        translationY = (Math.sin(thetaRadians) + (5 * chipYCenterOne))/5;
+        translationX = (Math.cos(thetaRadians)*scalingOutOne + chipXCenterOne);
+        translationY = (Math.sin(thetaRadians)*scalingOutOne + chipYCenterOne);
         rm = rotateZ(theta);
         tm = translate(translationX, translationY, 0.0);
         sm = scalem(scalingMarkerOne, scalingMarkerOne, scalingMarkerOne);
@@ -408,8 +519,8 @@ function selectBets(){
         chipMarkers = mat4();
         theta -= 45;
         var thetaRadians = theta * Math.PI/180;
-        translationX =  (Math.cos(thetaRadians)*.20 + chipXCenterFive);
-        translationY =  (Math.sin(thetaRadians)*.20 + chipYCenterFive);
+        translationX =  (Math.cos(thetaRadians)*scalingOutFive + chipXCenterFive);
+        translationY =  (Math.sin(thetaRadians)*scalingOutFive + chipYCenterFive);
         rm = rotateZ(theta);
         tm = translate(translationX, translationY, 0.0);
         sm = scalem(scalingMarkerFive, scalingMarkerFive, scalingMarkerFive);
@@ -445,8 +556,8 @@ function selectBets(){
         chipMarkers = mat4();
         theta -= 45;
         var thetaRadians = theta * Math.PI/180;
-        translationX =  (Math.cos(thetaRadians)*.20 + chipXCenterTen);
-        translationY =  (Math.sin(thetaRadians)*.20 + chipYCenterTen);
+        translationX =  (Math.cos(thetaRadians)*scalingOutTen + chipXCenterTen);
+        translationY =  (Math.sin(thetaRadians)*scalingOutTen + chipYCenterTen);
         rm = rotateZ(theta);
         tm = translate(translationX, translationY, 0.0);
         sm = scalem(scalingMarkerTen, scalingMarkerTen, scalingMarkerTen);
@@ -482,8 +593,8 @@ function selectBets(){
         chipMarkers = mat4();
         theta -= 45;
         var thetaRadians = theta * Math.PI/180;
-        translationX =  (Math.cos(thetaRadians)*.20 + chipXCenterTwoFive);
-        translationY =  (Math.sin(thetaRadians)*.20 + chipYCenterTwoFive);
+        translationX =  (Math.cos(thetaRadians)*scalingOutTwoFive + chipXCenterTwoFive);
+        translationY =  (Math.sin(thetaRadians)*scalingOutTwoFive + chipYCenterTwoFive);
         rm = rotateZ(theta);
         tm = translate(translationX, translationY, 0.0);
         sm = scalem(scalingMarkerTwoFive, scalingMarkerTwoFive, scalingMarkerTwoFive);
@@ -501,7 +612,9 @@ function selectBets(){
 
 function render() {
     gl.clear( gl.COLOR_BUFFER_BIT );
+
     if (state == 1){
+        createBetArea();
         selectBets();
     }
     window.requestAnimFrame(render);
