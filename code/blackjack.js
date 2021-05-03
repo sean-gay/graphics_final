@@ -221,10 +221,15 @@ function createChips(){
 // Creates bet area
 function createBetArea(){
     var tm, sm, rm, pm;
-    var betAreaInsideMat;
+
     var betAreaOutsideWideMat;
     var betAreaOutsideTallMat;
+    var betAreaOutsideCornerMat;
+
+    var betAreaInsideWideMat;
+    var betAreaInsideTallMat;
     var betAreaCornerMat;
+
     pm = ortho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
 
     //Outside Wide Rectangle - Yellow 
@@ -246,19 +251,28 @@ function createBetArea(){
     gl.drawArrays( gl.TRIANGLE_FAN, 86, 6);
 
     // Outside Corner
-    betAreaCornerMat = mat4();
+    betAreaOutsideCornerMat = mat4();
     tm = translate(0.8, 0.40, 0.0);
     sm = scalem(0.05, 0.05, 1.0);
     rm = rotateZ(90);
-    betAreaCornerMat = mult(sm, betAreaCornerMat);
-    betAreaCornerMat = mult(rm, betAreaCornerMat);
-    betAreaCornerMat = mult(tm, betAreaCornerMat);
-    betAreaCornerMat = mult(pm, betAreaCornerMat);
+    betAreaOutsideCornerMat = mult(sm, betAreaOutsideCornerMat);
+    betAreaOutsideCornerMat = mult(rm, betAreaOutsideCornerMat);
+    betAreaOutsideCornerMat = mult(tm, betAreaOutsideCornerMat);
+    betAreaOutsideCornerMat = mult(pm, betAreaOutsideCornerMat);
     gl.uniform3fv( u_ColorLoc, betAreaColor );
-    gl.uniformMatrix4fv(u_ctMatrixLoc, false, flatten(betAreaCornerMat));
+    gl.uniformMatrix4fv(u_ctMatrixLoc, false, flatten(betAreaOutsideCornerMat));
     gl.drawArrays( gl.TRIANGLE_FAN, 92, 20);
 
-    
+    //Outside Wide Rectangle - Yellow 
+    betAreaInsideWideMat = mat4();
+    tm = translate(0.9, -1, 0.0);
+    sm = scalem(1.0, 0.9, 1.0);
+    betAreaInsideWideMat = mult(sm, betAreaInsideWideMat);
+    betAreaInsideWideMat = mult(tm, betAreaInsideWideMat);
+    betAreaInsideWideMat = mult(pm, betAreaInsideWideMat);
+    gl.uniform3fv( u_ColorLoc, feltColor );
+    gl.uniformMatrix4fv(u_ctMatrixLoc, false, flatten(betAreaInsideWideMat));
+    gl.drawArrays( gl.TRIANGLE_FAN, 80, 6);
 
 }
 
