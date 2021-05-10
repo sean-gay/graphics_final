@@ -1318,7 +1318,12 @@ function playerHit() {
 }
 
 function resetBetBuffers(){
-  console.log("inside reset");
+
+  document.getElementsByClassName(
+    "betting-actions-container"
+  )[0].style.display = "flex";
+  document.getElementsByClassName("hand-actions-container")[0].style.display =
+    "none";
 
   //update state
   gl.uniform1i(u_ControllerStateLoc, true);
@@ -1347,7 +1352,7 @@ function resetBetBuffers(){
 
   //reset depth
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-  gl.disable(gl.DEPTH_TEST); 
+  gl.disable(gl.DEPTH_TEST);
 }
 
 function updatePlayerCardCount( newCard ) {
