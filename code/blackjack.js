@@ -148,25 +148,38 @@ var cards = [
 
 var texCoord = [vec2(0, 0), vec2(0, 1), vec2(1, 1), vec2(1, 0)];
 
+function newCardVerts( start, inc, cardID ) {
+  var newVerts = [];
+  for (var i = 0; i < 8; i++) {
+    newVerts[i] = cardVertices[i]
+  }
+  for (var i = 0; i < 8; i++) {
+    newVerts[i].x = cardVertices[i].x + inc;
+  }
+  cardVertices.push(...newVerts);
+  newColorCube(start, start+1, start+2, start+3, start+4, start+5, start+6, start+7)
+  drawCard(numVertices, numVertices/4, cardID);
+}
+
 //Texture Verts
 var cardVertices = [
-  vec4(-0.75, -0.75, 0.0, 1.0),
-  vec4(-0.75, -0.25, 0.0, 1.0),
-  vec4(-0.25, -0.25, 0.0, 1.0),
-  vec4(-0.25, -0.75, 0.0, 1.0),
-  vec4(-0.75, -0.75, 0.0, 1.0),
-  vec4(-0.75, -0.25, 0.0, 1.0),
-  vec4(-0.25, -0.25, 0.0, 1.0),
-  vec4(-0.25, -0.75, 0.0, 1.0),
+  vec4(-0.7, -0.95, 0.0, 1.0),
+  vec4(-0.7, -0.45, 0.0, 1.0),
+  vec4(-0.25, -0.45, 0.0, 1.0),
+  vec4(-0.25, -0.95, 0.0, 1.0),
+  vec4(-0.7, -0.95, 0.0, 1.0),
+  vec4(-0.7, -0.45, 0.0, 1.0),
+  vec4(-0.25, -0.45, 0.0, 1.0),
+  vec4(-0.25, -0.95, 0.0, 1.0),
   // second card
-  vec4(-0.5, -0.5, 0.0, 1.0),
-  vec4(-0.5, 0.0, 0.0, 1.0),
-  vec4(0.0, 0.0, 0.0, 1.0),
-  vec4(0.0, -0.5, 0.0, 1.0),
-  vec4(-0.5, -0.5, 0.0, 1.0),
-  vec4(-0.5, 0.0, 0.0, 1.0),
-  vec4(0.0, 0.0, 0.0, 1.0),
-  vec4(0.0, -0.5, 0.0, 1.0),
+  vec4(-0.95, -0.95, 0.0, 1.0),
+  vec4(-0.95, -0.45, 0.0, 1.0),
+  vec4(-0.45, -0.45, 0.0, 1.0),
+  vec4(-0.45, -0.95, 0.0, 1.0),
+  vec4(-0.95, -0.95, 0.0, 1.0),
+  vec4(-0.95, -0.45, 0.0, 1.0),
+  vec4(-0.45, -0.45, 0.0, 1.0),
+  vec4(-0.45, -0.95, 0.0, 1.0),
   // third card
   vec4(0.25, 0.25, 0.0, 1.0),
   vec4(0.25, 0.75, 0.0, 1.0),
@@ -307,6 +320,16 @@ function quad(a, b, c, d) {
   pointsArray.push(cardVertices[d]);
   colorsArray.push(vertexColors[a]);
   texCoordsArray.push(texCoord[2]);
+}
+
+// a(0), b(1), c(2), d(3), e(4), f(5), g(6), h(7)
+function newColorCube(a, b, c, d, e, f, g, h) {
+  quad(b+8, a+8, d+8, c+8);
+  quad(c+8, d+8, h+8, g+8);
+  quad(d+8, a+8, e+8, h+8);
+  quad(g+8, f+8, b+8, c+8);
+  quad(e+8, f+8, g+8, h+8);
+  quad(f+8, e+8, a+8, b+8);
 }
 
 //Coloring Cards
@@ -1368,6 +1391,7 @@ function updatePlayerCardCount( newCard ) {
 function playerHit() {
   var nextPlayerCard = determineHitCard();
   updatePlayerCardCount( nextPlayerCard );
+  newCardVerts( 32, 0.2, nextPlayerCard );
   console.log(nextPlayerCard);
 }
 
