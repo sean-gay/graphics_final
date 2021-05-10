@@ -15,6 +15,14 @@ var u_textureSamplerLoc;
 
 var texture;
 
+//Cards 
+var playerCard1;
+var playerCard2; 
+var dealerCard1;
+var dealerCard2;
+
+var currentCards = [];
+
 var max = 52;
 var cards = [
     "2CImage",
@@ -71,16 +79,6 @@ var cards = [
     "ASImage",
     "backImage"
 ];
-
-// cards to be dealt to player and dealer
-var playerCard1 = cards[Math.floor(Math.random(0, 52) * max)];
-var playerCard2 = cards[Math.floor(Math.random(0, 52) * max)];
-var dealerCard1 = cards[Math.floor(Math.random(0, 52) * max)];
-var dealerCard2 = cards[Math.floor(Math.random(0, 52) * max)];
-console.log(playerCard1);
-console.log(playerCard2);
-console.log(dealerCard1);
-console.log(dealerCard2);
 
 
 var texCoord = [
@@ -231,6 +229,7 @@ function configureTexture( image ) {
 }
 
 
+
 function quad(a, b, c, d) {
      pointsArray.push(vertices[a]);
      colorsArray.push(vertexColors[a]);
@@ -314,6 +313,39 @@ function drawCard(start, end, cardID) {
     gl.drawArrays( gl.TRIANGLES, start, end );
 }
 
+//Dealing initial hand and checking matches 
+function dealCards(){
+    // cards to be dealt to player and dealer
+    playerCard1 = cards[Math.floor(Math.random(0, 52) * max)];
+    currentCards.push(playerCard1);
+
+
+    playerCard2 = cards[Math.floor(Math.random(0, 52) * max)];
+    while (playerCard2 == playerCard1){
+        playerCard2 = cards[Math.floor(Math.random(0, 52) * max)];
+    }
+    currentCards.push(playerCard2);
+
+    
+    dealerCard1 = cards[Math.floor(Math.random(0, 52) * max)];
+    while ((dealerCard1 == playerCard1) || (dealerCard1 == playerCard2) ){
+        dealerCard1 = cards[Math.floor(Math.random(0, 52) * max)];
+    }
+    currentCards.push(dealerCard1);
+
+
+    dealerCard2 = cards[Math.floor(Math.random(0, 52) * max)];
+    while ((dealerCard2 == playerCard1) || (dealerCard2 == playerCard2) || (dealerCard2 == dealerCard1)){
+        dealerCard2 = cards[Math.floor(Math.random(0, 52) * max)];
+    }
+    currentCards.push(dealerCard2);
+
+    console.log(playerCard1);
+    console.log(playerCard2);
+    console.log(dealerCard1);
+    console.log(dealerCard2);
+}
+
 function drawAll() {
     //var playerCard1 = cards[Math.floor(Math.random(0, 52) * max)];
     //var playerCard2 = cards[Math.floor(Math.random(0, 52) * max)];
@@ -334,6 +366,9 @@ window.onload = function init() {
     gl.clearColor( 1.0, 1.0, 1.0, 1.0 );
 
     gl.enable(gl.DEPTH_TEST);
+
+    // deal initial hand to player
+    dealCards();
 
     //
     //  Load shaders and initialize attribute buffers

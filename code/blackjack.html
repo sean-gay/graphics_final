@@ -11,21 +11,55 @@
 attribute vec4 a_vPosition;
 uniform mat4 u_ctMatrix;
 uniform vec2 u_vCenter;
+uniform int u_ControllerState;
+
+<!-- Importing Cards Over -->
+attribute  vec4 a_vPositionHand;
+attribute  vec4 a_vColorHand;
+attribute  vec2 a_vTexCoord;
+varying vec4 v_fColor;
+varying vec2 v_fTexCoord;
+uniform mat4 u_ctMatrixHand;
 
 void
 main()
 {
-    gl_Position = u_ctMatrix * vec4(a_vPosition.x + u_vCenter.x, a_vPosition.y + u_vCenter.y, 0.0, 1.0);
+    vec4 temp_position = u_ctMatrix * vec4(a_vPosition.x + u_vCenter.x, a_vPosition.y + u_vCenter.y, 0.0, 1.0);
+    if(u_ControllerState == 0){
+      temp_position = u_ctMatrix * vec4(a_vPosition.x + u_vCenter.x, a_vPosition.y + u_vCenter.y, 0.0, 1.0);
+    } else {
+      v_fColor = a_vColorHand;
+      v_fTexCoord = a_vTexCoord;
+      temp_position = u_ctMatrixHand * a_vPositionHand;
+    }
+    gl_Position = temp_position;
 }
 </script>
 
 <script id="fragment-shader" type="x-shader/x-fragment">
 precision mediump float;
+
 uniform vec3 u_Color;
+
+<!-- Importing Cards -->
+varying vec4 v_fColor;
+varying  vec2 v_fTexCoord;
+
+uniform sampler2D u_textureSampler;
+uniform int u_ColorState;
+
 void
 main()
 {
-    gl_FragColor = vec4(u_Color, 0.8);
+    vec4 temp_color = vec4(u_Color, 0.8);
+    if (u_ColorState == 0){
+      temp_color = vec4(u_Color, 0.8);
+    } else {
+      vec4 color;
+      color = v_fColor * texture2D( u_textureSampler, v_fTexCoord );
+      temp_color = color;
+    }
+    gl_FragColor = temp_color;
 }
 </script>
 
@@ -59,6 +93,60 @@ main()
   <!--- The following message is displayed if the browser doesn't support HTML5 --->
   Oops ... your browser doesn't support the HTML5 canvas element
   </canvas>
+  
+<img id = "2CImage" src = "../card_jpgs/2C.jpg" hidden></img>
+<img id = "2DImage" src = "../card_jpgs/2D.jpg" hidden></img>
+<img id = "2HImage" src = "../card_jpgs/2H.jpg" hidden></img>
+<img id = "2SImage" src = "../card_jpgs/2S.jpg" hidden></img>
+<img id = "3CImage" src = "../card_jpgs/3C.jpg" hidden></img>
+<img id = "3DImage" src = "../card_jpgs/3D.jpg" hidden></img>
+<img id = "3HImage" src = "../card_jpgs/3H.jpg" hidden></img>
+<img id = "3SImage" src = "../card_jpgs/3S.jpg" hidden></img>
+<img id = "4CImage" src = "../card_jpgs/4C.jpg" hidden></img>
+<img id = "4DImage" src = "../card_jpgs/4D.jpg" hidden></img>
+<img id = "4HImage" src = "../card_jpgs/4H.jpg" hidden></img>
+<img id = "4SImage" src = "../card_jpgs/4S.jpg" hidden></img>
+<img id = "5CImage" src = "../card_jpgs/5C.jpg" hidden></img>
+<img id = "5DImage" src = "../card_jpgs/5D.jpg" hidden></img>
+<img id = "5HImage" src = "../card_jpgs/5H.jpg" hidden></img>
+<img id = "5SImage" src = "../card_jpgs/5S.jpg" hidden></img>
+<img id = "6CImage" src = "../card_jpgs/6C.jpg" hidden></img>
+<img id = "6DImage" src = "../card_jpgs/6D.jpg" hidden></img>
+<img id = "6HImage" src = "../card_jpgs/6H.jpg" hidden></img>
+<img id = "6SImage" src = "../card_jpgs/6S.jpg" hidden></img>
+<img id = "7CImage" src = "../card_jpgs/7C.jpg" hidden></img>
+<img id = "7DImage" src = "../card_jpgs/7D.jpg" hidden></img>
+<img id = "7HImage" src = "../card_jpgs/7H.jpg" hidden></img>
+<img id = "7SImage" src = "../card_jpgs/7S.jpg" hidden></img>
+<img id = "8CImage" src = "../card_jpgs/8C.jpg" hidden></img>
+<img id = "8DImage" src = "../card_jpgs/8D.jpg" hidden></img>
+<img id = "8HImage" src = "../card_jpgs/8H.jpg" hidden></img>
+<img id = "8SImage" src = "../card_jpgs/8S.jpg" hidden></img>
+<img id = "9CImage" src = "../card_jpgs/9C.jpg" hidden></img>
+<img id = "9DImage" src = "../card_jpgs/9D.jpg" hidden></img>
+<img id = "9HImage" src = "../card_jpgs/9H.jpg" hidden></img>
+<img id = "9SImage" src = "../card_jpgs/9S.jpg" hidden></img>
+<img id = "10CImage" src = "../card_jpgs/10C.jpg" hidden></img>
+<img id = "10DImage" src = "../card_jpgs/10D.jpg" hidden></img>
+<img id = "10HImage" src = "../card_jpgs/10H.jpg" hidden></img>
+<img id = "10SImage" src = "../card_jpgs/10S.jpg" hidden></img>
+<img id = "JCImage" src = "../card_jpgs/JC.jpg" hidden></img>
+<img id = "JDImage" src = "../card_jpgs/JD.jpg" hidden></img>
+<img id = "JHImage" src = "../card_jpgs/JH.jpg" hidden></img>
+<img id = "JSImage" src = "../card_jpgs/JS.jpg" hidden></img>
+<img id = "QCImage" src = "../card_jpgs/QC.jpg" hidden></img>
+<img id = "QDImage" src = "../card_jpgs/QD.jpg" hidden></img>
+<img id = "QHImage" src = "../card_jpgs/QH.jpg" hidden></img>
+<img id = "QSImage" src = "../card_jpgs/QS.jpg" hidden></img>
+<img id = "KCImage" src = "../card_jpgs/KC.jpg" hidden></img>
+<img id = "KDImage" src = "../card_jpgs/KD.jpg" hidden></img>
+<img id = "KHImage" src = "../card_jpgs/KH.jpg" hidden></img>
+<img id = "KSImage" src = "../card_jpgs/KS.jpg" hidden></img>
+<img id = "ACImage" src = "../card_jpgs/AC.jpg" hidden></img>
+<img id = "ADImage" src = "../card_jpgs/AD.jpg" hidden></img>
+<img id = "AHImage" src = "../card_jpgs/AH.jpg" hidden></img>
+<img id = "ASImage" src = "../card_jpgs/AS.jpg" hidden></img>
+<img id = "backImage" src = "../card_jpgs/blue_back.jpg" hidden></img>
 
   <div class="content-divider">
     <hr class="dashed">
