@@ -1318,6 +1318,8 @@ function resetBetBuffers(){
   )[0].style.display = "flex";
   document.getElementsByClassName("hand-actions-container")[0].style.display =
     "none";
+  document.getElementsByClassName("current-game-stage")[0].textContent =
+    "Game Stage: Place Bet";
 
   //update state
   gl.uniform1i(u_ControllerStateLoc, true);
