@@ -90,7 +90,19 @@ body .betting-actions-container {
   padding: 3px;
 }
 
-body .betting-actions-container button {
+body .start-game-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+body .start-game-container button {
+  width: 100%;
+  margin-top: 95px;
+}
+
+body button {
   transition-duration: 0.4s;
   background-color: white;
   color: black;
@@ -110,11 +122,11 @@ body .betting-actions-container .right-arrow {
 }
 
 
-body .start-button, .hit-card {
+body .deal-hand, .hit-card {
   border: 2px solid #4CAF50; /* Green */
 }
 
-body .start-button:hover, .hit-card:hover {
+body .deal-hand:hover, .hit-card:hover {
   border: 2px solid #4CAF50; /* Green */
   background-color: #4CAF50; /* Green */
   color: white;
@@ -140,11 +152,21 @@ body .remove-last-bet:hover, .stay-card:hover {
   color: white;
 }
 
-body .deal-hand, .double-down-card {
+body .start-button {
   border: 2px solid #12c7db; /* Blue */
 }
 
-body .deal-hand:hover, .double-down-card:hover {
+body .double-down-card {
+  border: 2px solid #fcba03; /* Orange */
+}
+
+body .double-down-card:hover {
+  border: 2px solid #fcba03; /* Orange */
+  background-color: #fcba03;
+  color: white;
+}
+
+body .start-button:hover, .double-down-card:hover {
   border: 2px solid #12c7db; /* Blue */
   background-color: #12c7db;
   color: white;
