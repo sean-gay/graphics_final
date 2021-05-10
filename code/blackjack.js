@@ -1291,6 +1291,42 @@ function prepareForHand() {
   state = 3;
 }
 
+// function to randomly generate card when hit selected
+function determineHitCard() {
+  var hitCard = cards[Math.floor(Math.random(0, 52) * max)];
+
+  var duplicateCard = currentCards.find((card) => {
+    return card == hitCard;
+  })
+
+  if (!duplicateCard) {
+    currentCards.push(hitCard);
+    return hitCard;
+  } else {
+    return determineHitCard();
+  }
+}
+
+function playerHit() {
+  var nextPlayerCard = determineHitCard();
+  updatePlayerCardCount( nextPlayerCard );
+  console.log(nextPlayerCard);
+}
+
+function updatePlayerCardCount( newCard ) {
+  var newCardValue = findCardValue( newCard );
+  playerCardCount += newCardValue;
+  console.log(playerCardCount);
+  if (playerCardCount > 21 && userStack == 0) {
+    alert("Bust! You have lost.");
+    window.location.reload(false);
+  } else if (playerCardCount > 21 && userStack > 0) {
+    state = 1;
+    createChips();
+    render();
+  }
+}
+
 function render() {
   gl.clear(gl.COLOR_BUFFER_BIT);
 
