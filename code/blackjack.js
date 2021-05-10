@@ -514,6 +514,7 @@ function initialSetup() {
   if (Name == null || Name == "") {
     Name = "User";
   }
+  document.getElementsByClassName("current-game-stage")[0].textContent = "Game Stage: Place Initial Bet"
   document.getElementsByClassName(
     "better-name"
   )[0].textContent = `Name: ${Name}`;
@@ -1255,9 +1256,14 @@ function removeLastBet() {
 function dealHand() {
   if (currentBet > 0) {
     state = 2;
+<<<<<<< HEAD
     controllerState = 1;
     gl.uniform1i(u_ControllerStateLoc, false);
     gl.uniform1i(u_ColorStateLoc, false);
+=======
+    document.getElementsByClassName("betting-actions-container")[0].style.display = "none";
+    document.getElementsByClassName("hand-actions-container")[0].style.display = "flex";
+>>>>>>> b21f878... added ui for card game state, about to rebase
   } else {
     alert("You must place a bet first!");
   }
