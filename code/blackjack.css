@@ -1,5 +1,5 @@
 * {
-  font-family: 'Roboto Mono', monospace;
+  font-family: "Roboto Mono", monospace;
 }
 
 body {
@@ -7,6 +7,10 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+body .card-images {
+  display: none;
 }
 
 body .main-content {
@@ -21,6 +25,19 @@ body .main-content .actions-view .content-divider {
   margin-top: 13px;
 }
 
+body .main-content .actions-view .canvas-area #unloaded-state--text-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+}
+
+body .main-content .actions-view .canvas-area #gl-canvas {
+  visibility: hidden;
+}
+
 body .content-divider hr.dashed {
   border-top: 3px dashed #bbb;
   border-bottom: none;
@@ -32,7 +49,7 @@ body .content-divider hr.dashed {
 body canvas {
   width: 512px;
   height: 512px;
-  border-radius: 5px;
+  border-radius: 8px;
 }
 
 body .title {
@@ -44,7 +61,27 @@ body .title h1 {
   margin-top: 0px;
 }
 
-body .actions-container {
+body .hand-actions-container {
+  display: none;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: space-between;
+  width: 512px;
+  padding: 3px;
+}
+
+body .hand-actions-container button {
+  transition-duration: 0.4s;
+  background-color: white;
+  color: black;
+  border-radius: 8px;
+  width: 20%;
+  padding: 3px;
+  margin: 10px 5px 10px 5px;
+  font-size: 15px;
+}
+
+body .betting-actions-container {
   display: flex;
   flex-flow: row wrap;
   align-items: center;
@@ -53,61 +90,69 @@ body .actions-container {
   padding: 3px;
 }
 
-body .actions-container button {
+body .betting-actions-container button {
   transition-duration: 0.4s;
   background-color: white;
   color: black;
-  border-radius: 4px;
+  border-radius: 8px;
   width: 20%;
   padding: 3px;
   margin: 10px 5px 10px 5px;
   font-size: 15px;
 }
 
-body .actions-container button:hover {
+body button:hover,
+#gl-canvas:hover {
   cursor: pointer;
 }
 
-body .actions-container .right-arrow {
+body .betting-actions-container .right-arrow {
   margin: 0;
 }
 
-
-body .actions-container .start-button {
-  border: 2px solid #4CAF50; /* Green */
+body .start-button,
+.hit-card {
+  border: 2px solid #4caf50; /* Green */
 }
 
-body .actions-container .start-button:hover {
-  border: 2px solid #4CAF50; /* Green */
-  background-color: #4CAF50; /* Green */
+body .start-button:hover,
+.hit-card:hover {
+  border: 2px solid #4caf50; /* Green */
+  background-color: #4caf50; /* Green */
   color: white;
 }
 
-body .actions-container .clear-all-bets {
+body .clear-all-bets,
+.split-card {
   border: 2px solid #ff0015; /* Red */
 }
 
-body .actions-container .clear-all-bets:hover {
+body .clear-all-bets:hover,
+.split-card:hover {
   border: 2px solid #ff0015; /* Red */
   background-color: #ff0015;
   color: white;
 }
 
-body .actions-container .remove-last-bet {
+body .remove-last-bet,
+.stay-card {
   border: 2px solid #d4c222; /* Yellow */
 }
 
-body .actions-container .remove-last-bet:hover {
+body .remove-last-bet:hover,
+.stay-card:hover {
   border: 2px solid #d4c222; /* Yellow */
   background-color: #d4c222;
   color: white;
 }
 
-body .actions-container .deal-hand {
+body .deal-hand,
+.double-down-card {
   border: 2px solid #12c7db; /* Blue */
 }
 
-body .actions-container .deal-hand:hover {
+body .deal-hand:hover,
+.double-down-card:hover {
   border: 2px solid #12c7db; /* Blue */
   background-color: #12c7db;
   color: white;
@@ -129,10 +174,10 @@ body .main-content .actions-view {
 }
 
 body .main-content .stats-view {
-    max-width: 35%;
-    display: flex;
-    flex-direction: column;
-    margin-left: 5px;
+  max-width: 35%;
+  display: flex;
+  flex-direction: column;
+  margin-left: 5px;
 }
 
 body .interface {
@@ -152,7 +197,12 @@ body .main-content .stats-view .interface .interface--bet-info {
   font-size: 18px;
 }
 
-body .main-content .stats-view .interface .interface--instructions .content-divider {
+body
+  .main-content
+  .stats-view
+  .interface
+  .interface--instructions
+  .content-divider {
   display: flex;
   max-width: 100% !important;
 }
@@ -166,7 +216,8 @@ body .page-footer {
   padding: 10px;
   margin: 10px;
   background-color: #878683;
-  border-radius: 5px;
+  border-radius: 8px;
+  color: white;
 }
 
 .instructions-text {
