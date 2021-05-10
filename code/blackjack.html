@@ -1,230 +1,215 @@
 <!DOCTYPE html>
 <html>
-<head>
-<link rel="stylesheet" type="text/css" href="blackjack.css">
-<link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&display=swap" rel="stylesheet">
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
-<title>Blackjack</title>
+  <head>
+    <link rel="stylesheet" type="text/css" href="blackjack.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&display=swap"
+      rel="stylesheet"
+    />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <title>Blackjack</title>
 
-<script id="vertex-shader" type="x-shader/x-vertex">
-attribute vec4 a_vPosition;
-uniform mat4 u_ctMatrix;
-uniform vec2 u_vCenter;
-uniform bool u_ControllerState;
+    <script id="vertex-shader" type="x-shader/x-vertex">
+      attribute vec4 a_vPosition;
+      uniform mat4 u_ctMatrix;
+      uniform vec2 u_vCenter;
+      uniform bool u_ControllerState;
 
-attribute  vec4 a_vPositionHand;
-attribute  vec4 a_vColorHand;
-attribute  vec2 a_vTexCoord;
-varying vec4 v_fColor;
-varying vec2 v_fTexCoord;
-uniform mat4 u_ctMatrixHand;
+      attribute  vec4 a_vPositionHand;
+      attribute  vec4 a_vColorHand;
+      attribute  vec2 a_vTexCoord;
+      varying vec4 v_fColor;
+      varying vec2 v_fTexCoord;
+      uniform mat4 u_ctMatrixHand;
 
-void
-main()
-{
-    vec4 temp_position;
-    if(u_ControllerState){
-      temp_position = u_ctMatrix * vec4(a_vPosition.x + u_vCenter.x, a_vPosition.y + u_vCenter.y, 0.0, 1.0);
-    } else {
-      v_fColor = a_vColorHand;
-      v_fTexCoord = a_vTexCoord;
-      temp_position = u_ctMatrixHand * a_vPositionHand;
-    }
-    gl_Position = temp_position;
-}
-</script>
+      void
+      main()
+      {
+          vec4 temp_position;
+          if(u_ControllerState){
+            temp_position = u_ctMatrix * vec4(a_vPosition.x + u_vCenter.x, a_vPosition.y + u_vCenter.y, 0.0, 1.0);
+          } else {
+            v_fColor = a_vColorHand;
+            v_fTexCoord = a_vTexCoord;
+            temp_position = u_ctMatrixHand * a_vPositionHand;
+          }
+          gl_Position = temp_position;
+      }
+    </script>
 
-<script id="fragment-shader" type="x-shader/x-fragment">
-precision mediump float;
+    <script id="fragment-shader" type="x-shader/x-fragment">
+      precision mediump float;
 
-uniform vec3 u_Color;
+      uniform vec3 u_Color;
 
-varying vec4 v_fColor;
-varying  vec2 v_fTexCoord;
+      varying vec4 v_fColor;
+      varying  vec2 v_fTexCoord;
 
-uniform sampler2D u_textureSampler;
-uniform bool u_ColorState;
+      uniform sampler2D u_textureSampler;
+      uniform bool u_ColorState;
 
-void
-main()
-{
-    vec4 temp_color = vec4(u_Color, 0.8);
-    if (u_ColorState){
-      temp_color = vec4(u_Color, 0.8);
-    } else {
-      vec4 color;
-      color = v_fColor * texture2D( u_textureSampler, v_fTexCoord );
-      temp_color = color;
-    }
-    gl_FragColor = temp_color;
-}
-</script>
+      void
+      main()
+      {
+          vec4 temp_color = vec4(u_Color, 0.8);
+          if (u_ColorState){
+            temp_color = vec4(u_Color, 0.8);
+          } else {
+            vec4 color;
+            color = v_fColor * texture2D( u_textureSampler, v_fTexCoord );
+            temp_color = color;
+          }
+          gl_FragColor = temp_color;
+      }
+    </script>
 
-<!--- Loading commonly used WebGL utility functions --->
-<!--- The <script> tag points to JavaScript files which will be loaded by the browser --->
-<script type="text/javascript" src="../Common/webgl-utils.js"></script>
-<!--- Loading the code to read, compile, and link the shaders, same for every application --->
-<script type="text/javascript" src="../Common/initShaders.js"></script>
-<!--- Loading the matrix-vector package --->
-<script type="text/javascript" src="../Common/MV.js"></script>
-<!--- Loading the application javascript file --->
-<script type="text/javascript" src="blackjack.js"></script>
-</head>
+    <!--- Loading commonly used WebGL utility functions --->
+    <!--- The <script> tag points to JavaScript files which will be loaded by the browser --->
+    <script type="text/javascript" src="../Common/webgl-utils.js"></script>
+    <!--- Loading the code to read, compile, and link the shaders, same for every application --->
+    <script type="text/javascript" src="../Common/initShaders.js"></script>
+    <!--- Loading the matrix-vector package --->
+    <script type="text/javascript" src="../Common/MV.js"></script>
+    <!--- Loading the application javascript file --->
+    <script type="text/javascript" src="blackjack.js"></script>
+  </head>
 
-<body>
-  <div class="title">
-    <h1>
-      WebGL Blackjack
-    </h1>
-  </div>
-  <div
-    class="main-content"
-  >
-  <div
-    class="actions-view"
-  >
-  <!--- Create a drawing surface --->
-  <!--- The canvas id can be referred to in the application file gasket1.js --->
-<<<<<<< HEAD
-  <canvas id="gl-canvas" width="512" height="512">
-    <!--  -->
-  <!--- The following message is displayed if the browser doesn't support HTML5 --->
-  Oops ... your browser doesn't support the HTML5 canvas element
-  </canvas>
-  
-<img id = "2CImage" src = "../card_jpgs/2C.jpg" hidden></img>
-<img id = "2DImage" src = "../card_jpgs/2D.jpg" hidden></img>
-<img id = "2HImage" src = "../card_jpgs/2H.jpg" hidden></img>
-<img id = "2SImage" src = "../card_jpgs/2S.jpg" hidden></img>
-<img id = "3CImage" src = "../card_jpgs/3C.jpg" hidden></img>
-<img id = "3DImage" src = "../card_jpgs/3D.jpg" hidden></img>
-<img id = "3HImage" src = "../card_jpgs/3H.jpg" hidden></img>
-<img id = "3SImage" src = "../card_jpgs/3S.jpg" hidden></img>
-<img id = "4CImage" src = "../card_jpgs/4C.jpg" hidden></img>
-<img id = "4DImage" src = "../card_jpgs/4D.jpg" hidden></img>
-<img id = "4HImage" src = "../card_jpgs/4H.jpg" hidden></img>
-<img id = "4SImage" src = "../card_jpgs/4S.jpg" hidden></img>
-<img id = "5CImage" src = "../card_jpgs/5C.jpg" hidden></img>
-<img id = "5DImage" src = "../card_jpgs/5D.jpg" hidden></img>
-<img id = "5HImage" src = "../card_jpgs/5H.jpg" hidden></img>
-<img id = "5SImage" src = "../card_jpgs/5S.jpg" hidden></img>
-<img id = "6CImage" src = "../card_jpgs/6C.jpg" hidden></img>
-<img id = "6DImage" src = "../card_jpgs/6D.jpg" hidden></img>
-<img id = "6HImage" src = "../card_jpgs/6H.jpg" hidden></img>
-<img id = "6SImage" src = "../card_jpgs/6S.jpg" hidden></img>
-<img id = "7CImage" src = "../card_jpgs/7C.jpg" hidden></img>
-<img id = "7DImage" src = "../card_jpgs/7D.jpg" hidden></img>
-<img id = "7HImage" src = "../card_jpgs/7H.jpg" hidden></img>
-<img id = "7SImage" src = "../card_jpgs/7S.jpg" hidden></img>
-<img id = "8CImage" src = "../card_jpgs/8C.jpg" hidden></img>
-<img id = "8DImage" src = "../card_jpgs/8D.jpg" hidden></img>
-<img id = "8HImage" src = "../card_jpgs/8H.jpg" hidden></img>
-<img id = "8SImage" src = "../card_jpgs/8S.jpg" hidden></img>
-<img id = "9CImage" src = "../card_jpgs/9C.jpg" hidden></img>
-<img id = "9DImage" src = "../card_jpgs/9D.jpg" hidden></img>
-<img id = "9HImage" src = "../card_jpgs/9H.jpg" hidden></img>
-<img id = "9SImage" src = "../card_jpgs/9S.jpg" hidden></img>
-<img id = "10CImage" src = "../card_jpgs/10C.jpg" hidden></img>
-<img id = "10DImage" src = "../card_jpgs/10D.jpg" hidden></img>
-<img id = "10HImage" src = "../card_jpgs/10H.jpg" hidden></img>
-<img id = "10SImage" src = "../card_jpgs/10S.jpg" hidden></img>
-<img id = "JCImage" src = "../card_jpgs/JC.jpg" hidden></img>
-<img id = "JDImage" src = "../card_jpgs/JD.jpg" hidden></img>
-<img id = "JHImage" src = "../card_jpgs/JH.jpg" hidden></img>
-<img id = "JSImage" src = "../card_jpgs/JS.jpg" hidden></img>
-<img id = "QCImage" src = "../card_jpgs/QC.jpg" hidden></img>
-<img id = "QDImage" src = "../card_jpgs/QD.jpg" hidden></img>
-<img id = "QHImage" src = "../card_jpgs/QH.jpg" hidden></img>
-<img id = "QSImage" src = "../card_jpgs/QS.jpg" hidden></img>
-<img id = "KCImage" src = "../card_jpgs/KC.jpg" hidden></img>
-<img id = "KDImage" src = "../card_jpgs/KD.jpg" hidden></img>
-<img id = "KHImage" src = "../card_jpgs/KH.jpg" hidden></img>
-<img id = "KSImage" src = "../card_jpgs/KS.jpg" hidden></img>
-<img id = "ACImage" src = "../card_jpgs/AC.jpg" hidden></img>
-<img id = "ADImage" src = "../card_jpgs/AD.jpg" hidden></img>
-<img id = "AHImage" src = "../card_jpgs/AH.jpg" hidden></img>
-<img id = "ASImage" src = "../card_jpgs/AS.jpg" hidden></img>
-<img id = "backImage" src = "../card_jpgs/blue_back.jpg" hidden></img>
-=======
-  <div
-    class="canvas-area"
-  >
-  <div
-    id="unloaded-state--text-area"
-  >
-    <p>
-      Please press "Start New Game" to make the canvas appear
-    </p>
-  </div>
-    <canvas id="gl-canvas" width="512" height="512">
-      <!--  -->
-    <!--- The following message is displayed if the browser doesn't support HTML5 --->
-    Oops ... your browser doesn't support the HTML5 canvas element
-    </canvas>
-  </div>
->>>>>>> f242594... committing before rebase with main
-
-  <div class="content-divider">
-    <hr class="dashed">
-  </div>
-
-  <div class="betting-actions-container">
-    <button class="start-button" onclick="initialSetup()">Start New Game</button>
-    <button class="remove-last-bet" onclick="removeLastBet()">Remove Last Bet</button>
-    <button class="clear-all-bets" onclick="clearBets()">Clear All Bets</button>
-    <button class="deal-hand" onclick="dealHand()">Deal Hand &#65293;&#65293;> </button>
-  </div>
-
-  <div class="hand-actions-container">
-    <button class="hit-card">Hit Card</button>
-    <button class="stay-card">Stay Card</button>
-    <button class="split-card">Split Cards</button>
-    <button class="double-down-card">Double Down</button>
-  </div>
-
-  </div>
-  <div
-    class="stats-view"
-  >
-  <div class="interface">
-    <div class="interface--instructions">
-      <h2>
-        Instructions
-      </h2>
-      <p
-        class="instructions-text"
-      >
-        To start a game, simply press the "Start new Game" button.  The game has two stages, one where you place your bet, and one where you can view the results of the current hand.  Place a bet by clicking on the chips found on the screen to the left.  Your personal betting info can be found right below these instructions.  Please note that the maximum amount you can bet in one turn is $100 and the maximum number of chips which you can bet at one time is 5 chips.  Good luck!
-      </p>
+  <body>
+    <div class="title">
+      <h1>WebGL Blackjack</h1>
     </div>
-    <div class="content-divider">
-      <hr class="dashed">
+    <div class="main-content">
+      <div class="actions-view">
+        <!--- Create a drawing surface --->
+        <!--- The canvas id can be referred to in the application file gasket1.js --->
+        <div class="canvas-area">
+          <div id="unloaded-state--text-area">
+            <p>Please press "Start New Game" to make the canvas appear</p>
+          </div>
+          <canvas id="gl-canvas" width="512" height="512">
+            <!--  -->
+            <!--- The following message is displayed if the browser doesn't support HTML5 --->
+            Oops ... your browser doesn't support the HTML5 canvas element
+          </canvas>
+        </div>
+
+        <div class="content-divider">
+          <hr class="dashed" />
+        </div>
+
+        <div class="betting-actions-container">
+          <button class="start-button" onclick="initialSetup()">
+            Start New Game
+          </button>
+          <button class="remove-last-bet" onclick="removeLastBet()">
+            Remove Last Bet
+          </button>
+          <button class="clear-all-bets" onclick="clearBets()">
+            Clear All Bets
+          </button>
+          <button class="deal-hand" onclick="dealHand()">
+            Deal Hand &#65293;&#65293;>
+          </button>
+        </div>
+
+        <div class="hand-actions-container">
+          <button class="hit-card">Hit Card</button>
+          <button class="stay-card">Stay Card</button>
+          <button class="split-card">Split Cards</button>
+          <button class="double-down-card">Double Down</button>
+        </div>
+      </div>
+      <div class="stats-view">
+        <div class="interface">
+          <div class="interface--instructions">
+            <h2>Instructions</h2>
+            <p class="instructions-text">
+              To start a game, simply press the "Start new Game" button. The
+              game has two screens, one where you place your bet, and one where
+              you can view the results of the current hand. Place a bet by
+              clicking on the chips found on the screen to the left. Your
+              personal betting info can be found right below these instructions.
+              Please note that the maximum amount you can bet in one turn is
+              $100 and the maximum number of chips which you can bet at one time
+              is 5 chips. Good luck!
+            </p>
+          </div>
+          <div class="content-divider">
+            <hr class="dashed" />
+          </div>
+          <div class="interface--title">
+            <h2>Bet Info</h2>
+          </div>
+          <div class="interface--bet-info">
+            <p class="current-game-stage">Game Stage: Unstarted</p>
+            <p class="better-name">Name:</p>
+            <p class="better-stack">Stack:</p>
+            <p class="current-bet-amount">Current Bet:</p>
+            <p class="current-hand-value">Current Hand Value:</p>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="interface--title">
-      <h2>
-        Bet Info
-      </h2>
+    <div class="card-images">
+      <img id="2CImage" src="../card_jpgs/2C.jpg" />
+      <img id="2DImage" src="../card_jpgs/2D.jpg" />
+      <img id="2HImage" src="../card_jpgs/2H.jpg" />
+      <img id="2SImage" src="../card_jpgs/2S.jpg" />
+      <img id="3CImage" src="../card_jpgs/3C.jpg" />
+      <img id="3DImage" src="../card_jpgs/3D.jpg" />
+      <img id="3HImage" src="../card_jpgs/3H.jpg" />
+      <img id="3SImage" src="../card_jpgs/3S.jpg" />
+      <img id="4CImage" src="../card_jpgs/4C.jpg" />
+      <img id="4DImage" src="../card_jpgs/4D.jpg" />
+      <img id="4HImage" src="../card_jpgs/4H.jpg" />
+      <img id="4SImage" src="../card_jpgs/4S.jpg" />
+      <img id="5CImage" src="../card_jpgs/5C.jpg" />
+      <img id="5DImage" src="../card_jpgs/5D.jpg" />
+      <img id="5HImage" src="../card_jpgs/5H.jpg" />
+      <img id="5SImage" src="../card_jpgs/5S.jpg" />
+      <img id="6CImage" src="../card_jpgs/6C.jpg" />
+      <img id="6DImage" src="../card_jpgs/6D.jpg" />
+      <img id="6HImage" src="../card_jpgs/6H.jpg" />
+      <img id="6SImage" src="../card_jpgs/6S.jpg" />
+      <img id="7CImage" src="../card_jpgs/7C.jpg" />
+      <img id="7DImage" src="../card_jpgs/7D.jpg" />
+      <img id="7HImage" src="../card_jpgs/7H.jpg" />
+      <img id="7SImage" src="../card_jpgs/7S.jpg" />
+      <img id="8CImage" src="../card_jpgs/8C.jpg" />
+      <img id="8DImage" src="../card_jpgs/8D.jpg" />
+      <img id="8HImage" src="../card_jpgs/8H.jpg" />
+      <img id="8SImage" src="../card_jpgs/8S.jpg" />
+      <img id="9CImage" src="../card_jpgs/9C.jpg" />
+      <img id="9DImage" src="../card_jpgs/9D.jpg" />
+      <img id="9HImage" src="../card_jpgs/9H.jpg" />
+      <img id="9SImage" src="../card_jpgs/9S.jpg" />
+      <img id="10CImage" src="../card_jpgs/10C.jpg" />
+      <img id="10DImage" src="../card_jpgs/10D.jpg" />
+      <img id="10HImage" src="../card_jpgs/10H.jpg" />
+      <img id="10SImage" src="../card_jpgs/10S.jpg" />
+      <img id="JCImage" src="../card_jpgs/JC.jpg" />
+      <img id="JDImage" src="../card_jpgs/JD.jpg" />
+      <img id="JHImage" src="../card_jpgs/JH.jpg" />
+      <img id="JSImage" src="../card_jpgs/JS.jpg" />
+      <img id="QCImage" src="../card_jpgs/QC.jpg" />
+      <img id="QDImage" src="../card_jpgs/QD.jpg" />
+      <img id="QHImage" src="../card_jpgs/QH.jpg" />
+      <img id="QSImage" src="../card_jpgs/QS.jpg" />
+      <img id="KCImage" src="../card_jpgs/KC.jpg" />
+      <img id="KDImage" src="../card_jpgs/KD.jpg" />
+      <img id="KHImage" src="../card_jpgs/KH.jpg" />
+      <img id="KSImage" src="../card_jpgs/KS.jpg" />
+      <img id="ACImage" src="../card_jpgs/AC.jpg" />
+      <img id="ADImage" src="../card_jpgs/AD.jpg" />
+      <img id="AHImage" src="../card_jpgs/AH.jpg" />
+      <img id="ASImage" src="../card_jpgs/AS.jpg" />
+      <img id="backImage" src="../card_jpgs/blue_back.jpg" />
     </div>
-    <div
-      class="interface--bet-info"
-    >
-    <p class="current-game-stage">Game Stage: Unstarted</p>
-    <p class="better-name">Name: </p>
-    <p class="better-stack">Stack: </p>
-    <p class="current-bet-amount">Current Bet: </p>
-    <p class="current-hand-value">Current Hand Value: </p>
+    <div class="page-footer">
+      <footer>
+        <small>&copy; Copyright 2021 Jack Morgan, Sean Gay, Sean Crotty</small>
+      </footer>
     </div>
-  </div>
-
-  </div>
-
-
-  </div>
-  <div class="page-footer">
-    <footer> <small>&copy; Copyright 2021 Jack Morgan, Sean Gay, Sean Crotty</small> </footer>
-  </div>
-
-
-</body>
+  </body>
 </html>
