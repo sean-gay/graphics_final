@@ -1311,12 +1311,6 @@ function determineHitCard() {
   }
 }
 
-function playerHit() {
-  var nextPlayerCard = determineHitCard();
-  updatePlayerCardCount( nextPlayerCard );
-  console.log(nextPlayerCard);
-}
-
 function resetBetBuffers(){
 
   document.getElementsByClassName(
@@ -1365,8 +1359,14 @@ function updatePlayerCardCount( newCard ) {
 
   } else if (playerCardCount > 21 && userStack > 0) {
     resetBetBuffers();
-    render();
+    originalStack = userStack;
   }
+}
+
+function playerHit() {
+  var nextPlayerCard = determineHitCard();
+  updatePlayerCardCount( nextPlayerCard );
+  console.log(nextPlayerCard);
 }
 
 function render() {
