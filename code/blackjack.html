@@ -23,9 +23,9 @@ uniform mat4 u_ctMatrixHand;
 void
 main()
 {
-    vec4 temp_position = u_ctMatrix * vec4(a_vPosition.x + u_vCenter.x, a_vPosition.y + u_vCenter.y, 0.0, 1.0);
+    vec4 temp_position;
     if(u_ControllerState){
-      //temp_position = u_ctMatrix * vec4(a_vPosition.x + u_vCenter.x, a_vPosition.y + u_vCenter.y, 0.0, 1.0);
+      temp_position = u_ctMatrix * vec4(a_vPosition.x + u_vCenter.x, a_vPosition.y + u_vCenter.y, 0.0, 1.0);
     } else {
       v_fColor = a_vColorHand;
       v_fTexCoord = a_vTexCoord;

@@ -352,26 +352,6 @@ function drawCard(start, end, cardID) {
   var image = document.getElementById(cardID);
   configureTexture( image );
 
-    // Buffer for Cards
-  var cBuffer = gl.createBuffer();
-  gl.bindBuffer( gl.ARRAY_BUFFER, cBuffer );
-  gl.bufferData( gl.ARRAY_BUFFER, flatten(colorsArray), gl.STATIC_DRAW );
-
-    //Position for deal
-  var a_vPositionHandLoc = gl.getAttribLocation( program, "a_vPositionHand" );
-  gl.vertexAttribPointer( a_vPositionHandLoc, 4, gl.FLOAT, false, 0, 0 );
-  gl.enableVertexAttribArray( a_vPositionHandLoc );
-
-  // Color for deal
-  var a_vColorHandLoc = gl.getAttribLocation( program, "a_vColorHand" );
-  gl.vertexAttribPointer( a_vColorHandLoc, 4, gl.FLOAT, false, 0, 0 );
-  gl.enableVertexAttribArray( a_vColorHandLoc );
-
-  // Cards Verts Buffer
-  var vBuffer = gl.createBuffer();
-  gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
-  gl.bufferData( gl.ARRAY_BUFFER, flatten(pointsArray), gl.STATIC_DRAW );
-
   var tBuffer = gl.createBuffer();
   gl.bindBuffer( gl.ARRAY_BUFFER, tBuffer );
   gl.bufferData( gl.ARRAY_BUFFER, flatten(texCoordsArray), gl.STATIC_DRAW );
@@ -421,6 +401,7 @@ function dealCards(){
   console.log(playerCard2);
   console.log(dealerCard1);
   console.log(dealerCard2);
+  gl.enable(gl.DEPTH_TEST);
 }
 
 // Draw the Cards
@@ -441,7 +422,6 @@ window.onload = function init() {
   }
   gl.viewport(0, 0, canvas.width, canvas.height);
   gl.clearColor(0.14, 0.58, 0.15, 1.0); //green
-  //gl.enable(gl.DEPTH_TEST);
 
   // Setup Chips
   createChips();
@@ -1223,9 +1203,30 @@ function dealHand() {
 }
 
 function prepareForHand() {
-  gl.clear(gl.COLOR_BUFFER_BIT);
   dealCards();
   colorCube();
+
+  // Buffer for Cards
+  var cBuffer = gl.createBuffer();
+  gl.bindBuffer( gl.ARRAY_BUFFER, cBuffer );
+  gl.bufferData( gl.ARRAY_BUFFER, flatten(colorsArray), gl.STATIC_DRAW );
+  console.log("buffer created");
+
+  // Color for deal
+  var a_vColorHandLoc = gl.getAttribLocation( program, "a_vColorHand" );
+  gl.vertexAttribPointer( a_vColorHandLoc, 4, gl.FLOAT, false, 0, 0 );
+  gl.enableVertexAttribArray( a_vColorHandLoc );
+
+  // Cards Verts Buffer
+  var vBuffer = gl.createBuffer();
+  gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
+  gl.bufferData( gl.ARRAY_BUFFER, flatten(pointsArray), gl.STATIC_DRAW );
+
+  //Position for deal
+  var a_vPositionHandLoc = gl.getAttribLocation( program, "a_vPositionHand" );
+  gl.vertexAttribPointer( a_vPositionHandLoc, 4, gl.FLOAT, false, 0, 0 );
+  gl.enableVertexAttribArray( a_vPositionHandLoc );
+  
   state = 3;
 }
 
@@ -1238,6 +1239,7 @@ function render() {
   } else if (state == 2) {
     prepareForHand();
   } else if (state == 3) {
+    gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     drawAll();
   }
   window.requestAnimFrame(render);
