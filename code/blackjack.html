@@ -11,9 +11,8 @@
 attribute vec4 a_vPosition;
 uniform mat4 u_ctMatrix;
 uniform vec2 u_vCenter;
-uniform int u_ControllerState;
+uniform bool u_ControllerState;
 
-<!-- Importing Cards Over -->
 attribute  vec4 a_vPositionHand;
 attribute  vec4 a_vColorHand;
 attribute  vec2 a_vTexCoord;
@@ -25,8 +24,8 @@ void
 main()
 {
     vec4 temp_position = u_ctMatrix * vec4(a_vPosition.x + u_vCenter.x, a_vPosition.y + u_vCenter.y, 0.0, 1.0);
-    if(u_ControllerState == 0){
-      temp_position = u_ctMatrix * vec4(a_vPosition.x + u_vCenter.x, a_vPosition.y + u_vCenter.y, 0.0, 1.0);
+    if(u_ControllerState){
+      //temp_position = u_ctMatrix * vec4(a_vPosition.x + u_vCenter.x, a_vPosition.y + u_vCenter.y, 0.0, 1.0);
     } else {
       v_fColor = a_vColorHand;
       v_fTexCoord = a_vTexCoord;
@@ -41,18 +40,17 @@ precision mediump float;
 
 uniform vec3 u_Color;
 
-<!-- Importing Cards -->
 varying vec4 v_fColor;
 varying  vec2 v_fTexCoord;
 
 uniform sampler2D u_textureSampler;
-uniform int u_ColorState;
+uniform bool u_ColorState;
 
 void
 main()
 {
     vec4 temp_color = vec4(u_Color, 0.8);
-    if (u_ColorState == 0){
+    if (u_ColorState){
       temp_color = vec4(u_Color, 0.8);
     } else {
       vec4 color;

@@ -420,7 +420,7 @@ window.onload = function init() {
   }
   gl.viewport(0, 0, canvas.width, canvas.height);
   gl.clearColor(0.14, 0.58, 0.15, 1.0); //green
-  gl.enable(gl.DEPTH_TEST);
+  //gl.enable(gl.DEPTH_TEST);
 
   // Setup Chips
   createChips();
@@ -433,30 +433,30 @@ window.onload = function init() {
   gl.bindBuffer(gl.ARRAY_BUFFER, chipsBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, flatten(chipVertices), gl.STATIC_DRAW);
 
-  // Buffer for Cards
-  var cBuffer = gl.createBuffer();
-  gl.bindBuffer( gl.ARRAY_BUFFER, cBuffer );
-   gl.bufferData( gl.ARRAY_BUFFER, flatten(colorsArray), gl.STATIC_DRAW );
+  // // Buffer for Cards
+  // var cBuffer = gl.createBuffer();
+  // gl.bindBuffer( gl.ARRAY_BUFFER, cBuffer );
+  //  gl.bufferData( gl.ARRAY_BUFFER, flatten(colorsArray), gl.STATIC_DRAW );
 
   // Position Pre deal
   var a_vPositionLoc = gl.getAttribLocation(program, "a_vPosition");
   gl.vertexAttribPointer(a_vPositionLoc, 2, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(a_vPositionLoc);
 
-  //Position for deal
-  var a_vPositionHandLoc = gl.getAttribLocation( program, "a_vPositionHand" );
-  gl.vertexAttribPointer( a_vPositionHandLoc, 4, gl.FLOAT, false, 0, 0 );
-  gl.enableVertexAttribArray( a_vPositionHandLoc );
+  // //Position for deal
+  // var a_vPositionHandLoc = gl.getAttribLocation( program, "a_vPositionHand" );
+  // gl.vertexAttribPointer( a_vPositionHandLoc, 4, gl.FLOAT, false, 0, 0 );
+  // gl.enableVertexAttribArray( a_vPositionHandLoc );
 
-  // Color for deal
-  var a_vColorHandLoc = gl.getAttribLocation( program, "a_vColorHand" );
-  gl.vertexAttribPointer( a_vColorHandLoc, 4, gl.FLOAT, false, 0, 0 );
-  gl.enableVertexAttribArray( a_vColorHandLoc );
+  // // Color for deal
+  // var a_vColorHandLoc = gl.getAttribLocation( program, "a_vColorHand" );
+  // gl.vertexAttribPointer( a_vColorHandLoc, 4, gl.FLOAT, false, 0, 0 );
+  // gl.enableVertexAttribArray( a_vColorHandLoc );
 
-  // Cards Verts Buffer
-  var vBuffer = gl.createBuffer();
-  gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
-  gl.bufferData( gl.ARRAY_BUFFER, flatten(pointsArray), gl.STATIC_DRAW );
+  // // Cards Verts Buffer
+  // var vBuffer = gl.createBuffer();
+  // gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
+  // gl.bufferData( gl.ARRAY_BUFFER, flatten(pointsArray), gl.STATIC_DRAW );
 
   u_ColorLoc = gl.getUniformLocation(program, "u_Color");
   u_ctMatrixLoc = gl.getUniformLocation(program, "u_ctMatrix");
@@ -464,10 +464,10 @@ window.onload = function init() {
 
   //Set Controller States for gl
   u_ControllerStateLoc = gl.getUniformLocation(program, "u_ControllerState");
-  gl.uniform1i(u_ControllerStateLoc, 0);
+  gl.uniform1i(u_ControllerStateLoc, true);
 
   u_ColorStateLoc = gl.getUniformLocation(program, "u_ColorState");
-  gl.uniform1i(u_ColorStateLoc, 0);
+  gl.uniform1i(u_ColorStateLoc, true);
   render();
 };
 
@@ -601,7 +601,6 @@ function createChips() {
       )
     );
   }
-  console.log(cornerVerts.length);
 
   chipVertices.push(...cornerVerts);
 
@@ -1215,8 +1214,8 @@ function dealHand() {
   if (currentBet > 0) {
     state = 2;
     controllerState = 1;
-    gl.uniform1i(u_ControllerStateLoc, 1);
-    gl.uniform1i(u_ColorStateLoc, 1);
+    gl.uniform1i(u_ControllerStateLoc, false);
+    gl.uniform1i(u_ColorStateLoc, false);
   } else {
     alert("You must place a bet first!");
   }
