@@ -411,11 +411,7 @@ function drawCard(start, end, cardID) {
 }
 
 //Dealing initial hand and checking matches
-<<<<<<< HEAD
 function dealCards(){
-=======
-function dealCards() {
->>>>>>> 9325f4b... integrated second ui screen with functionality for displaying cards
   // cards to be dealt to player and dealer
   playerCard1 = cards[Math.floor(Math.random(0, 52) * max)];
   currentCards.push(playerCard1);
@@ -1262,7 +1258,6 @@ function dealHand() {
     )[0].style.display = "none";
     document.getElementsByClassName("hand-actions-container")[0].style.display =
       "flex";
-    document.getElementsByClassName("current-game-stage")[0].textContent = "Current Stage: Deal Cards"
   } else {
     alert("You must place a bet first!");
   }
@@ -1289,15 +1284,9 @@ function prepareForHand() {
   gl.bufferData(gl.ARRAY_BUFFER, flatten(pointsArray), gl.STATIC_DRAW);
 
   //Position for deal
-<<<<<<< HEAD
   var a_vPositionHandLoc = gl.getAttribLocation( program, "a_vPositionHand" );
   gl.vertexAttribPointer( a_vPositionHandLoc, 4, gl.FLOAT, false, 0, 0 );
   gl.enableVertexAttribArray( a_vPositionHandLoc );
-=======
-  var a_vPositionHandLoc = gl.getAttribLocation(program, "a_vPositionHand");
-  gl.vertexAttribPointer(a_vPositionHandLoc, 4, gl.FLOAT, false, 0, 0);
-  gl.enableVertexAttribArray(a_vPositionHandLoc);
->>>>>>> 9325f4b... integrated second ui screen with functionality for displaying cards
 
   state = 3;
 }
