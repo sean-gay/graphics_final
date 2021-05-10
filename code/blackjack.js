@@ -89,6 +89,13 @@ var dealerCardCount;
 var currentCards = [];
 var max = 52;
 
+var cBuffer;
+var a_vColorHandLoc;
+var vBuffer;
+var a_vPositionHandLoc;
+var tBuffer;
+var a_vTexCoordLoc;
+
 //Card Texture Images
 var cards = [
   "2CImage",
@@ -148,38 +155,26 @@ var cards = [
 
 var texCoord = [vec2(0, 0), vec2(0, 1), vec2(1, 1), vec2(1, 0)];
 
-function newCardVerts( start, inc, cardID ) {
-  var newVerts = [];
-  for (var i = 0; i < 8; i++) {
-    newVerts[i] = cardVertices[i]
-  }
-  for (var i = 0; i < 8; i++) {
-    newVerts[i].x = cardVertices[i].x + inc;
-  }
-  cardVertices.push(...newVerts);
-  newColorCube(start, start+1, start+2, start+3, start+4, start+5, start+6, start+7)
-  drawCard(numVertices, numVertices/4, cardID);
-}
-
 //Texture Verts
 var cardVertices = [
-  vec4(-0.7, -0.95, 0.0, 1.0),
-  vec4(-0.7, -0.45, 0.0, 1.0),
-  vec4(-0.25, -0.45, 0.0, 1.0),
-  vec4(-0.25, -0.95, 0.0, 1.0),
-  vec4(-0.7, -0.95, 0.0, 1.0),
-  vec4(-0.7, -0.45, 0.0, 1.0),
-  vec4(-0.25, -0.45, 0.0, 1.0),
-  vec4(-0.25, -0.95, 0.0, 1.0),
+  // first card
+  vec4(-0.95, -0.95, 0.0, 1.0),
+  vec4(-0.95, -0.45, 0.0, 1.0),
+  vec4(-0.45, -0.45, 0.0, 1.0),
+  vec4(-0.45, -0.95, 0.0, 1.0),
+  vec4(-0.95, -0.95, 0.0, 1.0),
+  vec4(-0.95, -0.45, 0.0, 1.0),
+  vec4(-0.45, -0.45, 0.0, 1.0),
+  vec4(-0.45, -0.95, 0.0, 1.0),
   // second card
-  vec4(-0.95, -0.95, 0.0, 1.0),
-  vec4(-0.95, -0.45, 0.0, 1.0),
-  vec4(-0.45, -0.45, 0.0, 1.0),
-  vec4(-0.45, -0.95, 0.0, 1.0),
-  vec4(-0.95, -0.95, 0.0, 1.0),
-  vec4(-0.95, -0.45, 0.0, 1.0),
-  vec4(-0.45, -0.45, 0.0, 1.0),
-  vec4(-0.45, -0.95, 0.0, 1.0),
+  vec4(-0.7, -0.95, 0.0, 1.0),
+  vec4(-0.7, -0.45, 0.0, 1.0),
+  vec4(-0.25, -0.45, 0.0, 1.0),
+  vec4(-0.25, -0.95, 0.0, 1.0),
+  vec4(-0.7, -0.95, 0.0, 1.0),
+  vec4(-0.7, -0.45, 0.0, 1.0),
+  vec4(-0.25, -0.45, 0.0, 1.0),
+  vec4(-0.25, -0.95, 0.0, 1.0),
   // third card
   vec4(0.25, 0.25, 0.0, 1.0),
   vec4(0.25, 0.75, 0.0, 1.0),
@@ -198,6 +193,15 @@ var cardVertices = [
   vec4(0.5, 1.0, 0.0, 1.0),
   vec4(1.0, 1.0, 0.0, 1.0),
   vec4(1.0, 0.5, 0.0, 1.0),
+  // fifth card
+  vec4(-0.5, -0.95, 0.0, 1.0),
+  vec4(-0.5, -0.45, 0.0, 1.0),
+  vec4(-0.05, -0.45, 0.0, 1.0),
+  vec4(-0.05, -0.95, 0.0, 1.0),
+  vec4(-0.5, -0.95, 0.0, 1.0),
+  vec4(-0.5, -0.45, 0.0, 1.0),
+  vec4(-0.05, -0.45, 0.0, 1.0),
+  vec4(-0.05, -0.95, 0.0, 1.0),
 ];
 
 var vertexColors = [
@@ -228,6 +232,15 @@ var vertexColors = [
   vec4(1.0, 1.0, 1.0, 1.0), // white
   vec4(1.0, 1.0, 1.0, 1.0), // cyan
   // fourth set
+  vec4(1.0, 1.0, 1.0, 1.0), // black
+  vec4(1.0, 1.0, 1.0, 1.0), // red
+  vec4(1.0, 1.0, 1.0, 1.0), // yellow
+  vec4(1.0, 1.0, 1.0, 1.0), // green
+  vec4(1.0, 1.0, 1.0, 1.0), // blue
+  vec4(1.0, 1.0, 1.0, 1.0), // magenta
+  vec4(1.0, 1.0, 1.0, 1.0), // white
+  vec4(1.0, 1.0, 1.0, 1.0), // cyan
+  // fifth set
   vec4(1.0, 1.0, 1.0, 1.0), // black
   vec4(1.0, 1.0, 1.0, 1.0), // red
   vec4(1.0, 1.0, 1.0, 1.0), // yellow
@@ -322,16 +335,6 @@ function quad(a, b, c, d) {
   texCoordsArray.push(texCoord[2]);
 }
 
-// a(0), b(1), c(2), d(3), e(4), f(5), g(6), h(7)
-function newColorCube(a, b, c, d, e, f, g, h) {
-  quad(b+8, a+8, d+8, c+8);
-  quad(c+8, d+8, h+8, g+8);
-  quad(d+8, a+8, e+8, h+8);
-  quad(g+8, f+8, b+8, c+8);
-  quad(e+8, f+8, g+8, h+8);
-  quad(f+8, e+8, a+8, b+8);
-}
-
 //Coloring Cards
 function colorCube() {
   quad(1, 0, 3, 2);
@@ -361,6 +364,13 @@ function colorCube() {
   quad(30, 29, 25, 26);
   quad(28, 29, 30, 31);
   quad(29, 28, 24, 25);
+  // five
+  quad(33, 32, 35, 34);
+  quad(34, 35, 39, 38);
+  quad(35, 32, 36, 39);
+  quad(38, 37, 33, 34);
+  quad(36, 37, 38, 39);
+  quad(37, 36, 32, 33);
 }
 
 function findCardValue( str ) {
@@ -411,15 +421,10 @@ function findCardValue( str ) {
 
 //Draw Card
 function drawCard(start, end, cardID) {
-  //gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   var image = document.getElementById(cardID);
   configureTexture(image);
 
-  var tBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, tBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, flatten(texCoordsArray), gl.STATIC_DRAW);
-
-  var a_vTexCoordLoc = gl.getAttribLocation(program, "a_vTexCoord");
+  a_vTexCoordLoc = gl.getAttribLocation(program, "a_vTexCoord");
   gl.vertexAttribPointer(a_vTexCoordLoc, 2, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(a_vTexCoordLoc);
 
@@ -433,6 +438,12 @@ function drawCard(start, end, cardID) {
   pmHand = mult(rxyz[axis], pmHand);
   ctMatrix = mult(ortho(-1, 1, -1, 1, -1, 1), pmHand);
   gl.uniformMatrix4fv(u_ctMatrixHandLoc, false, flatten(ctMatrix));
+
+  //Texture buffer settings
+  tBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, tBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, flatten(texCoordsArray), gl.STATIC_DRAW);
+
   gl.drawArrays(gl.TRIANGLES, start, end);
 }
 
@@ -471,21 +482,26 @@ function dealCards(){
   var dealerCard2Value = findCardValue( dealerCard2 );
   playerCardCount = playerCard1Value + playerCard2Value;
   dealerCardCount = dealerCard1Value + dealerCard2Value;
-  console.log(playerCard1);
-  console.log(playerCard2);
-  console.log(dealerCard1);
-  console.log(dealerCard2);
-  console.log(playerCardCount);
-  console.log(dealerCardCount);
+  // console.log(playerCard1);
+  // console.log(playerCard2);
+  // console.log(dealerCard1);
+  // console.log(dealerCard2);
+  // console.log(playerCardCount);
+  // console.log(dealerCardCount);
   gl.enable(gl.DEPTH_TEST);
 }
 
 // Draw the Cards
 function drawAll() {
-  drawCard(0, numVertices / 4, playerCard1);
-  drawCard(numVertices / 4, numVertices / 4, playerCard2);
-  drawCard(numVertices / 2, numVertices / 4, dealerCard1);
-  drawCard(numVertices * (3 / 4), numVertices / 4, "backImage");
+  for (var i = currentCards.length - 1; i >= 0; i -= 1){
+    var startIndex = 36 * i;
+    if (i == 3){
+      //Draw behind dealer card
+      drawCard(startIndex, 22, "backImage");
+    } else {
+      drawCard(startIndex, 22, currentCards[i]);
+    }
+  }
 }
 
 window.onload = function init() {
@@ -1293,30 +1309,33 @@ function dealHand() {
 function prepareForHand() {
   dealCards();
   colorCube();
+  updateDealtCardsBuffer();
+  state = 3;
+}
 
+function updateDealtCardsBuffer(){
   // Buffer for Cards
-  var cBuffer = gl.createBuffer();
+  cBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, cBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, flatten(colorsArray), gl.STATIC_DRAW);
-  console.log("buffer created");
 
   // Color for deal
-  var a_vColorHandLoc = gl.getAttribLocation(program, "a_vColorHand");
+  a_vColorHandLoc = gl.getAttribLocation(program, "a_vColorHand");
   gl.vertexAttribPointer(a_vColorHandLoc, 4, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(a_vColorHandLoc);
 
   // Cards Verts Buffer
-  var vBuffer = gl.createBuffer();
+  vBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, flatten(pointsArray), gl.STATIC_DRAW);
 
   //Position for deal
-  var a_vPositionHandLoc = gl.getAttribLocation( program, "a_vPositionHand" );
+  a_vPositionHandLoc = gl.getAttribLocation( program, "a_vPositionHand" );
   gl.vertexAttribPointer( a_vPositionHandLoc, 4, gl.FLOAT, false, 0, 0 );
   gl.enableVertexAttribArray( a_vPositionHandLoc );
 
-  state = 3;
 }
+
 
 // function to randomly generate card when hit selected
 function determineHitCard() {
@@ -1377,12 +1396,12 @@ function resetBetBuffers(){
 function updatePlayerCardCount( newCard ) {
   var newCardValue = findCardValue( newCard );
   playerCardCount += newCardValue;
-  console.log(playerCardCount);
+  //console.log(playerCardCount);
   if (playerCardCount > 21 && userStack == 0) {
     alert("Bust! You have lost.");
-    //window.location.reload(false);
 
-  } else if (playerCardCount > 21 && userStack > 0) {
+  } else if (playerCardCount > 30 && userStack > 0) {
+    alert("Wrong Alert");
     resetBetBuffers();
     originalStack = userStack;
   }
@@ -1390,8 +1409,8 @@ function updatePlayerCardCount( newCard ) {
 
 function playerHit() {
   var nextPlayerCard = determineHitCard();
+  //updateDealtCardsBuffer();
   updatePlayerCardCount( nextPlayerCard );
-  newCardVerts( 32, 0.2, nextPlayerCard );
   console.log(nextPlayerCard);
 }
 
