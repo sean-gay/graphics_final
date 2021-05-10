@@ -78,9 +78,11 @@ var colorsArray = [];
 var texCoordsArray = [];
 var texture;
 var playerCard1;
-var playerCard2; 
+var playerCard2;
 var dealerCard1;
 var dealerCard2;
+var playerCardCount;
+var dealerCardCount;
 var currentCards = [];
 var max = 52;
 
@@ -346,6 +348,52 @@ function colorCube(){
     quad( 29, 28, 24, 25 );
 }
 
+function findCardValue( str ) {
+  var cardValue;
+  switch (str.charAt(0)) {
+    case "2":
+      cardValue = 2;
+      break;
+    case "3":
+      cardValue = 3;
+      break;
+    case "4":
+      cardValue = 4;
+      break;
+    case "5":
+      cardValue = 5;
+      break;
+    case "6":
+      cardValue = 6;
+      break;
+    case "7":
+      cardValue = 7;
+      break;
+    case "8":
+      cardValue = 8;
+      break;
+    case "9":
+      cardValue = 9;
+      break;
+    case "1":
+      cardValue = 10;
+      break;
+    case "J":
+      cardValue = 10;
+      break;
+    case "Q":
+      cardValue = 10;
+      break;
+    case "K":
+      cardValue = 10;
+      break;
+    case "A":
+      cardValue = 11;
+      break;
+  }
+  return cardValue;
+}
+
 //Draw Card
 function drawCard(start, end, cardID) {
   //gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -373,7 +421,7 @@ function drawCard(start, end, cardID) {
   gl.drawArrays( gl.TRIANGLES, start, end );
 }
 
-//Dealing initial hand and checking matches 
+//Dealing initial hand and checking matches
 function dealCards(){
   // cards to be dealt to player and dealer
   playerCard1 = cards[Math.floor(Math.random(0, 52) * max)];
@@ -384,7 +432,7 @@ function dealCards(){
       playerCard2 = cards[Math.floor(Math.random(0, 52) * max)];
   }
   currentCards.push(playerCard2);
-  
+
   dealerCard1 = cards[Math.floor(Math.random(0, 52) * max)];
   while ((dealerCard1 == playerCard1) || (dealerCard1 == playerCard2) ){
       dealerCard1 = cards[Math.floor(Math.random(0, 52) * max)];
@@ -397,10 +445,19 @@ function dealCards(){
   }
   currentCards.push(dealerCard2);
 
+  // calculate player and dealer current card totals
+  var playerCard1Value = findCardValue( playerCard1 );
+  var playerCard2Value = findCardValue( playerCard2 );
+  var dealerCard1Value = findCardValue( dealerCard1 );
+  var dealerCard2Value = findCardValue( dealerCard2 );
+  playerCardCount = playerCard1Value + playerCard2Value;
+  dealerCardCount = dealerCard1Value + dealerCard2Value;
   console.log(playerCard1);
   console.log(playerCard2);
   console.log(dealerCard1);
   console.log(dealerCard2);
+  console.log(playerCardCount);
+  console.log(dealerCardCount);
   gl.enable(gl.DEPTH_TEST);
 }
 
@@ -1226,7 +1283,7 @@ function prepareForHand() {
   var a_vPositionHandLoc = gl.getAttribLocation( program, "a_vPositionHand" );
   gl.vertexAttribPointer( a_vPositionHandLoc, 4, gl.FLOAT, false, 0, 0 );
   gl.enableVertexAttribArray( a_vPositionHandLoc );
-  
+
   state = 3;
 }
 
