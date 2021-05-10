@@ -8,6 +8,7 @@ var u_textureSamplerLoc;
 var theta = 0.0;
 var u_vCenterLoc;
 var canvas;
+var program;
 
 // Initial Setup Info
 var Name;
@@ -351,6 +352,26 @@ function drawCard(start, end, cardID) {
   var image = document.getElementById(cardID);
   configureTexture( image );
 
+    // Buffer for Cards
+  var cBuffer = gl.createBuffer();
+  gl.bindBuffer( gl.ARRAY_BUFFER, cBuffer );
+  gl.bufferData( gl.ARRAY_BUFFER, flatten(colorsArray), gl.STATIC_DRAW );
+
+    //Position for deal
+  var a_vPositionHandLoc = gl.getAttribLocation( program, "a_vPositionHand" );
+  gl.vertexAttribPointer( a_vPositionHandLoc, 4, gl.FLOAT, false, 0, 0 );
+  gl.enableVertexAttribArray( a_vPositionHandLoc );
+
+  // Color for deal
+  var a_vColorHandLoc = gl.getAttribLocation( program, "a_vColorHand" );
+  gl.vertexAttribPointer( a_vColorHandLoc, 4, gl.FLOAT, false, 0, 0 );
+  gl.enableVertexAttribArray( a_vColorHandLoc );
+
+  // Cards Verts Buffer
+  var vBuffer = gl.createBuffer();
+  gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
+  gl.bufferData( gl.ARRAY_BUFFER, flatten(pointsArray), gl.STATIC_DRAW );
+
   var tBuffer = gl.createBuffer();
   gl.bindBuffer( gl.ARRAY_BUFFER, tBuffer );
   gl.bufferData( gl.ARRAY_BUFFER, flatten(texCoordsArray), gl.STATIC_DRAW );
@@ -425,7 +446,7 @@ window.onload = function init() {
   // Setup Chips
   createChips();
 
-  var program = initShaders(gl, "vertex-shader", "fragment-shader");
+  program = initShaders(gl, "vertex-shader", "fragment-shader");
   gl.useProgram(program);
 
   // Buffer for chips
@@ -433,30 +454,10 @@ window.onload = function init() {
   gl.bindBuffer(gl.ARRAY_BUFFER, chipsBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, flatten(chipVertices), gl.STATIC_DRAW);
 
-  // // Buffer for Cards
-  // var cBuffer = gl.createBuffer();
-  // gl.bindBuffer( gl.ARRAY_BUFFER, cBuffer );
-  //  gl.bufferData( gl.ARRAY_BUFFER, flatten(colorsArray), gl.STATIC_DRAW );
-
   // Position Pre deal
   var a_vPositionLoc = gl.getAttribLocation(program, "a_vPosition");
   gl.vertexAttribPointer(a_vPositionLoc, 2, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(a_vPositionLoc);
-
-  // //Position for deal
-  // var a_vPositionHandLoc = gl.getAttribLocation( program, "a_vPositionHand" );
-  // gl.vertexAttribPointer( a_vPositionHandLoc, 4, gl.FLOAT, false, 0, 0 );
-  // gl.enableVertexAttribArray( a_vPositionHandLoc );
-
-  // // Color for deal
-  // var a_vColorHandLoc = gl.getAttribLocation( program, "a_vColorHand" );
-  // gl.vertexAttribPointer( a_vColorHandLoc, 4, gl.FLOAT, false, 0, 0 );
-  // gl.enableVertexAttribArray( a_vColorHandLoc );
-
-  // // Cards Verts Buffer
-  // var vBuffer = gl.createBuffer();
-  // gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
-  // gl.bufferData( gl.ARRAY_BUFFER, flatten(pointsArray), gl.STATIC_DRAW );
 
   u_ColorLoc = gl.getUniformLocation(program, "u_Color");
   u_ctMatrixLoc = gl.getUniformLocation(program, "u_ctMatrix");
