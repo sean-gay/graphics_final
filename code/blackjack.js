@@ -72,6 +72,7 @@ var u_ControllerStateLoc;
 var u_ColorStateLoc;
 var bet = 0;
 var tally = 0;
+var dealerPlays = false;
 
 // Cards
 // Logic Porting Over From Outside Work
@@ -88,6 +89,7 @@ var playerCardCount;
 var dealerCardCount;
 var currentCards = [];
 var max = 52;
+var playerCount = 0;
 
 var cBuffer;
 var a_vColorHandLoc;
@@ -193,54 +195,42 @@ var cardVertices = [
   vec4(0.2, 0.95, 0.0, 1.0),
   vec4(0.7, 0.95, 0.0, 1.0),
   vec4(0.7, 0.45, 0.0, 1.0),
-  // fifth card
-  vec4(-0.5, -0.95, 0.0, 1.0),
-  vec4(-0.5, -0.45, 0.0, 1.0),
-  vec4(-0.05, -0.45, 0.0, 1.0),
-  vec4(-0.05, -0.95, 0.0, 1.0),
-  vec4(-0.5, -0.95, 0.0, 1.0),
-  vec4(-0.5, -0.45, 0.0, 1.0),
-  vec4(-0.05, -0.45, 0.0, 1.0),
-  vec4(-0.05, -0.95, 0.0, 1.0),
+];
+
+var playerCardThreeVerts = [
+    vec4(-0.5, -0.95, 0.0, 1.0),
+    vec4(-0.5, -0.45, 0.0, 1.0),
+    vec4(-0.05, -0.45, 0.0, 1.0),
+    vec4(-0.05, -0.95, 0.0, 1.0),
+    vec4(-0.5, -0.95, 0.0, 1.0),
+    vec4(-0.5, -0.45, 0.0, 1.0),
+    vec4(-0.05, -0.45, 0.0, 1.0),
+    vec4(-0.05, -0.95, 0.0, 1.0),
+];
+
+var playerCardFourVerts = [
+  vec4(-0.3, -0.95, 0.0, 1.0),
+  vec4(-0.3, -0.45, 0.0, 1.0),
+  vec4(0.15, -0.45, 0.0, 1.0),
+  vec4(0.15, -0.95, 0.0, 1.0),
+  vec4(-0.3, -0.95, 0.0, 1.0),
+  vec4(-0.3, -0.45, 0.0, 1.0),
+  vec4(0.15, -0.45, 0.0, 1.0),
+  vec4(0.15, -0.95, 0.0, 1.0),
+];
+
+var playerCardFiveVerts = [
+  vec4(-0.1, -0.95, 0.0, 1.0),
+  vec4(-0.1, -0.45, 0.0, 1.0),
+  vec4(0.35, -0.45, 0.0, 1.0),
+  vec4(0.35, -0.95, 0.0, 1.0),
+  vec4(-0.1, -0.95, 0.0, 1.0),
+  vec4(-0.1, -0.45, 0.0, 1.0),
+  vec4(0.35, -0.45, 0.0, 1.0),
+  vec4(0.35, -0.95, 0.0, 1.0),
 ];
 
 var vertexColors = [
-  vec4(1.0, 1.0, 1.0, 1.0), // black
-  vec4(1.0, 1.0, 1.0, 1.0), // red
-  vec4(1.0, 1.0, 1.0, 1.0), // yellow
-  vec4(1.0, 1.0, 1.0, 1.0), // green
-  vec4(1.0, 1.0, 1.0, 1.0), // blue
-  vec4(1.0, 1.0, 1.0, 1.0), // magenta
-  vec4(1.0, 1.0, 1.0, 1.0), // white
-  vec4(1.0, 1.0, 1.0, 1.0), // cyan
-  // second set
-  vec4(1.0, 1.0, 1.0, 1.0), // black
-  vec4(1.0, 1.0, 1.0, 1.0), // red
-  vec4(1.0, 1.0, 1.0, 1.0), // yellow
-  vec4(1.0, 1.0, 1.0, 1.0), // green
-  vec4(1.0, 1.0, 1.0, 1.0), // blue
-  vec4(1.0, 1.0, 1.0, 1.0), // magenta
-  vec4(1.0, 1.0, 1.0, 1.0), // white
-  vec4(1.0, 1.0, 1.0, 1.0), // cyan
-  // third set
-  vec4(1.0, 1.0, 1.0, 1.0), // black
-  vec4(1.0, 1.0, 1.0, 1.0), // red
-  vec4(1.0, 1.0, 1.0, 1.0), // yellow
-  vec4(1.0, 1.0, 1.0, 1.0), // green
-  vec4(1.0, 1.0, 1.0, 1.0), // blue
-  vec4(1.0, 1.0, 1.0, 1.0), // magenta
-  vec4(1.0, 1.0, 1.0, 1.0), // white
-  vec4(1.0, 1.0, 1.0, 1.0), // cyan
-  // fourth set
-  vec4(1.0, 1.0, 1.0, 1.0), // black
-  vec4(1.0, 1.0, 1.0, 1.0), // red
-  vec4(1.0, 1.0, 1.0, 1.0), // yellow
-  vec4(1.0, 1.0, 1.0, 1.0), // green
-  vec4(1.0, 1.0, 1.0, 1.0), // blue
-  vec4(1.0, 1.0, 1.0, 1.0), // magenta
-  vec4(1.0, 1.0, 1.0, 1.0), // white
-  vec4(1.0, 1.0, 1.0, 1.0), // cyan
-  // fifth set
   vec4(1.0, 1.0, 1.0, 1.0), // black
   vec4(1.0, 1.0, 1.0, 1.0), // red
   vec4(1.0, 1.0, 1.0, 1.0), // yellow
@@ -311,27 +301,27 @@ function configureTexture(image) {
 //Set arrays for card textures
 function quad(a, b, c, d) {
   pointsArray.push(cardVertices[a]);
-  colorsArray.push(vertexColors[a]);
+  colorsArray.push(vertexColors[0]);
   texCoordsArray.push(texCoord[1]);
 
   pointsArray.push(cardVertices[b]);
-  colorsArray.push(vertexColors[a]);
+  colorsArray.push(vertexColors[0]);
   texCoordsArray.push(texCoord[0]);
 
   pointsArray.push(cardVertices[c]);
-  colorsArray.push(vertexColors[a]);
+  colorsArray.push(vertexColors[0]);
   texCoordsArray.push(texCoord[3]);
 
   pointsArray.push(cardVertices[a]);
-  colorsArray.push(vertexColors[a]);
+  colorsArray.push(vertexColors[0]);
   texCoordsArray.push(texCoord[1]);
 
   pointsArray.push(cardVertices[c]);
-  colorsArray.push(vertexColors[a]);
+  colorsArray.push(vertexColors[0]);
   texCoordsArray.push(texCoord[3]);
 
   pointsArray.push(cardVertices[d]);
-  colorsArray.push(vertexColors[a]);
+  colorsArray.push(vertexColors[0]);
   texCoordsArray.push(texCoord[2]);
 }
 
@@ -364,13 +354,37 @@ function colorCube() {
   quad(30, 29, 25, 26);
   quad(28, 29, 30, 31);
   quad(29, 28, 24, 25);
-  // five
-  quad(33, 32, 35, 34);
-  quad(34, 35, 39, 38);
-  quad(35, 32, 36, 39);
-  quad(38, 37, 33, 34);
-  quad(36, 37, 38, 39);
-  quad(37, 36, 32, 33);
+}
+
+function newCardVerts(player, cardCount) {
+  var start = 0;
+  if (player == 0){
+    //add a new player card 
+    if (cardCount == 1){
+      //Third card
+      start = 24;
+      cardVertices.push(...playerCardThreeVerts);
+    } else if (cardCount == 2){
+      start = 32;
+      cardVertices.push(...playerCardFourVerts);
+    } else if (cardCount == 3){
+      start = 40;
+      cardVertices.push(...playerCardFiveVerts);
+    }
+  } else {
+    //add new dealer card
+  }
+  //Add to our color cube
+  newColorCube(start, start+1, start+2, start+3, start+4, start+5, start+6, start+7);
+}
+
+function newColorCube(a, b, c, d, e, f, g, h) {
+  quad(b+8, a+8, d+8, c+8);
+  quad(c+8, d+8, h+8, g+8);
+  quad(d+8, a+8, e+8, h+8);
+  quad(g+8, f+8, b+8, c+8);
+  quad(e+8, f+8, g+8, h+8);
+  quad(f+8, e+8, a+8, b+8);
 }
 
 function findCardValue( str ) {
@@ -443,8 +457,7 @@ function drawCard(start, end, cardID) {
   tBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, tBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, flatten(texCoordsArray), gl.STATIC_DRAW);
-
-  gl.drawArrays(gl.TRIANGLES, start, end);
+  gl.drawArrays(gl.TRIANGLES, start, 22);
 }
 
 //Dealing initial hand and checking matches
@@ -482,26 +495,29 @@ function dealCards(){
   var dealerCard2Value = findCardValue( dealerCard2 );
   playerCardCount = playerCard1Value + playerCard2Value;
   dealerCardCount = dealerCard1Value + dealerCard2Value;
-  // console.log(playerCard1);
-  // console.log(playerCard2);
-  // console.log(dealerCard1);
-  // console.log(dealerCard2);
-  // console.log(playerCardCount);
-  // console.log(dealerCardCount);
   gl.enable(gl.DEPTH_TEST);
 }
 
 // Draw the Cards
 function drawAll() {
-  for (var i = currentCards.length - 1; i >= 0; i -= 1){
+  //Ending 
+  startIndex = 144 - 22;
+  for (i = 4; i < currentCards.length; i += 1){
+      startIndex += 22;
+      drawCard(startIndex, 22, currentCards[i]);
+  }
+
+  // Starting 
+  for (var i = 3; i >= 0; i -= 1){
     var startIndex = 36 * i;
-    if (i == 2){
+    if (i == 2 && !dealerPlays){
       //Draw behind dealer card
       drawCard(startIndex, 22, "backImage");
     } else {
       drawCard(startIndex, 22, currentCards[i]);
     }
   }
+
 }
 
 window.onload = function init() {
@@ -1354,7 +1370,7 @@ function determineHitCard() {
 }
 
 function resetBetBuffers(){
-
+  currentCards = [];
   document.getElementsByClassName(
     "betting-actions-container"
   )[0].style.display = "flex";
@@ -1396,22 +1412,40 @@ function resetBetBuffers(){
 function updatePlayerCardCount( newCard ) {
   var newCardValue = findCardValue( newCard );
   playerCardCount += newCardValue;
-  //console.log(playerCardCount);
-  if (playerCardCount > 21 && userStack == 0) {
-    alert("Bust! You have lost.");
-
-  } else if (playerCardCount > 30 && userStack > 0) {
-    alert("Wrong Alert");
-    resetBetBuffers();
-    originalStack = userStack;
-  }
+  setTimeout(function () { 
+    if (playerCardCount > 21 && userStack == 0) {
+      alert("Bust! You have lost.");
+    } else if (playerCardCount > 21 && userStack > 0) {
+      alert("Bust!");
+      originalStack = userStack;
+      resetBetBuffers();
+    }
+  }, 500);
 }
 
 function playerHit() {
   var nextPlayerCard = determineHitCard();
-  //updateDealtCardsBuffer();
+  playerCount += 1;
+  newCardVerts(0, playerCount);
+  updateDealtCardsBuffer();
   updatePlayerCardCount( nextPlayerCard );
-  console.log(nextPlayerCard);
+}
+
+function stayHit(){
+  dealerPlays = true;
+  setTimeout(function () { 
+    if (playerCardCount > dealerCardCount) {
+      alert("You Win!");
+      userStack += (2 * currentBet);
+    } else if (playerCardCount == dealerCardCount) {
+      // get your money back
+      alert("Push!");
+      userStack += currentBet;
+    } else {
+      alert("You Lose!");
+    }
+    resetBetBuffers();
+  }, 500);
 }
 
 function render() {
