@@ -1,5 +1,5 @@
 * {
-  font-family: "Roboto Mono", monospace;
+  font-family: 'Roboto Mono', monospace;
 }
 
 body {
@@ -101,8 +101,7 @@ body .betting-actions-container button {
   font-size: 15px;
 }
 
-body button:hover,
-#gl-canvas:hover {
+body button:hover, #gl-canvas:hover {
   cursor: pointer;
 }
 
@@ -110,49 +109,42 @@ body .betting-actions-container .right-arrow {
   margin: 0;
 }
 
-body .start-button,
-.hit-card {
-  border: 2px solid #4caf50; /* Green */
+
+body .start-button, .hit-card {
+  border: 2px solid #4CAF50; /* Green */
 }
 
-body .start-button:hover,
-.hit-card:hover {
-  border: 2px solid #4caf50; /* Green */
-  background-color: #4caf50; /* Green */
+body .start-button:hover, .hit-card:hover {
+  border: 2px solid #4CAF50; /* Green */
+  background-color: #4CAF50; /* Green */
   color: white;
 }
 
-body .clear-all-bets,
-.split-card {
+body .clear-all-bets, .split-card {
   border: 2px solid #ff0015; /* Red */
 }
 
-body .clear-all-bets:hover,
-.split-card:hover {
+body .clear-all-bets:hover, .split-card:hover {
   border: 2px solid #ff0015; /* Red */
   background-color: #ff0015;
   color: white;
 }
 
-body .remove-last-bet,
-.stay-card {
+body .remove-last-bet, .stay-card {
   border: 2px solid #d4c222; /* Yellow */
 }
 
-body .remove-last-bet:hover,
-.stay-card:hover {
+body .remove-last-bet:hover, .stay-card:hover {
   border: 2px solid #d4c222; /* Yellow */
   background-color: #d4c222;
   color: white;
 }
 
-body .deal-hand,
-.double-down-card {
+body .deal-hand, .double-down-card {
   border: 2px solid #12c7db; /* Blue */
 }
 
-body .deal-hand:hover,
-.double-down-card:hover {
+body .deal-hand:hover, .double-down-card:hover {
   border: 2px solid #12c7db; /* Blue */
   background-color: #12c7db;
   color: white;
@@ -174,10 +166,10 @@ body .main-content .actions-view {
 }
 
 body .main-content .stats-view {
-  max-width: 35%;
-  display: flex;
-  flex-direction: column;
-  margin-left: 5px;
+    max-width: 35%;
+    display: flex;
+    flex-direction: column;
+    margin-left: 5px;
 }
 
 body .interface {
@@ -197,12 +189,7 @@ body .main-content .stats-view .interface .interface--bet-info {
   font-size: 18px;
 }
 
-body
-  .main-content
-  .stats-view
-  .interface
-  .interface--instructions
-  .content-divider {
+body .main-content .stats-view .interface .interface--instructions .content-divider {
   display: flex;
   max-width: 100% !important;
 }
