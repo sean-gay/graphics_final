@@ -1262,6 +1262,7 @@ function dealHand() {
     )[0].style.display = "none";
     document.getElementsByClassName("hand-actions-container")[0].style.display =
       "flex";
+    document.getElementsByClassName("current-game-stage")[0].textContent = "Current Stage: Deal Cards"
   } else {
     alert("You must place a bet first!");
   }
