@@ -73,6 +73,7 @@ var u_ColorStateLoc;
 var bet = 0;
 var tally = 0;
 var dealerPlays = false;
+var firstHand = true;
 
 // Cards
 // Logic Porting Over From Outside Work
@@ -1324,7 +1325,10 @@ function dealHand() {
 
 function prepareForHand() {
   dealCards();
-  colorCube();
+  if (firstHand){
+    colorCube();
+    firstHand = false;
+  }
   updateDealtCardsBuffer();
   state = 3;
 }
@@ -1349,7 +1353,6 @@ function updateDealtCardsBuffer(){
   a_vPositionHandLoc = gl.getAttribLocation( program, "a_vPositionHand" );
   gl.vertexAttribPointer( a_vPositionHandLoc, 4, gl.FLOAT, false, 0, 0 );
   gl.enableVertexAttribArray( a_vPositionHandLoc );
-
 }
 
 
@@ -1415,6 +1418,7 @@ function updatePlayerCardCount( newCard ) {
   setTimeout(function () { 
     if (playerCardCount > 21 && userStack == 0) {
       alert("Bust! You have lost.");
+      originalStack = 0;
     } else if (playerCardCount > 21 && userStack > 0) {
       alert("Bust!");
       originalStack = userStack;
@@ -1445,6 +1449,8 @@ function stayHit(){
       alert("You Lose!");
     }
     resetBetBuffers();
+    dealerPlays = false;
+    originalStack = userStack;
   }, 500);
 }
 
@@ -1459,6 +1465,6 @@ function render() {
   } else if (state == 3) {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     drawAll();
-  }
+  } 
   window.requestAnimFrame(render);
 }
