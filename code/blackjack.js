@@ -542,6 +542,10 @@ function initialSetup() {
     "current-bet-amount"
   )[0].textContent = `Current Bet Amount: $${currentBet}`;
 
+  document.getElementById("gl-canvas").style.visibility = "visible";
+  document.getElementById("unloaded-state--text-area").style.visibility = "hidden";
+  document.getElementById("unloaded-state--text-area").style.display = "none";
+
   //Update Game State
   clearBets();
   state = 1;

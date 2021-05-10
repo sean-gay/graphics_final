@@ -21,6 +21,19 @@ body .main-content .actions-view .content-divider {
   margin-top: 13px;
 }
 
+body .main-content .actions-view .canvas-area #unloaded-state--text-area {
+  visibility: visible;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+body .main-content .actions-view .canvas-area #gl-canvas {
+  visibility: hidden;
+}
+
 body .content-divider hr.dashed {
   border-top: 3px dashed #bbb;
   border-bottom: none;
@@ -32,7 +45,7 @@ body .content-divider hr.dashed {
 body canvas {
   width: 512px;
   height: 512px;
-  border-radius: 5px;
+  border-radius: 8px;
 }
 
 body .title {
@@ -57,7 +70,7 @@ body .actions-container button {
   transition-duration: 0.4s;
   background-color: white;
   color: black;
-  border-radius: 4px;
+  border-radius: 8px;
   width: 20%;
   padding: 3px;
   margin: 10px 5px 10px 5px;
@@ -166,7 +179,8 @@ body .page-footer {
   padding: 10px;
   margin: 10px;
   background-color: #878683;
-  border-radius: 5px;
+  border-radius: 8px;
+  color: white;
 }
 
 .instructions-text {
