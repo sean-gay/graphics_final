@@ -45,6 +45,9 @@ var scalingMarkerTen = 0.03;
 var scalingOutTwoFive = 0.2;
 var scalingMarkerTwoFive = 0.03;
 
+var chipsBuffer;
+var a_vPositionLoc;
+
 // Selection bouncing
 var isClicked = false;
 
@@ -478,13 +481,14 @@ window.onload = function init() {
   program = initShaders(gl, "vertex-shader", "fragment-shader");
   gl.useProgram(program);
 
+
   // Buffer for chips
-  var chipsBuffer = gl.createBuffer();
+  chipsBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, chipsBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, flatten(chipVertices), gl.STATIC_DRAW);
 
   // Position Pre deal
-  var a_vPositionLoc = gl.getAttribLocation(program, "a_vPosition");
+  a_vPositionLoc = gl.getAttribLocation(program, "a_vPosition");
   gl.vertexAttribPointer(a_vPositionLoc, 2, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(a_vPositionLoc);
 
@@ -1313,16 +1317,49 @@ function playerHit() {
   console.log(nextPlayerCard);
 }
 
+function resetBetBuffers(){
+  console.log("inside reset");
+
+  //update state
+  gl.uniform1i(u_ControllerStateLoc, true);
+  gl.uniform1i(u_ColorStateLoc, true);
+  state = 1;
+
+  //Update bets
+  position = 0;
+  betValues = [];
+  currentBet = 0;
+
+  // reset Buffer for chips
+  chipsBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, chipsBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, flatten(chipVertices), gl.STATIC_DRAW);
+
+  // reset Position Pre deal
+  a_vPositionLoc = gl.getAttribLocation(program, "a_vPosition");
+  gl.vertexAttribPointer(a_vPositionLoc, 2, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(a_vPositionLoc);
+
+  //reset locations
+  u_ColorLoc = gl.getUniformLocation(program, "u_Color");
+  u_ctMatrixLoc = gl.getUniformLocation(program, "u_ctMatrix");
+  u_vCenterLoc = gl.getUniformLocation(program, "u_vCenter");
+
+  //reset depth
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  gl.disable(gl.DEPTH_TEST); 
+}
+
 function updatePlayerCardCount( newCard ) {
   var newCardValue = findCardValue( newCard );
   playerCardCount += newCardValue;
   console.log(playerCardCount);
   if (playerCardCount > 21 && userStack == 0) {
     alert("Bust! You have lost.");
-    window.location.reload(false);
+    //window.location.reload(false);
+
   } else if (playerCardCount > 21 && userStack > 0) {
-    state = 1;
-    createChips();
+    resetBetBuffers();
     render();
   }
 }
