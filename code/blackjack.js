@@ -10,6 +10,9 @@ var u_vCenterLoc;
 var canvas;
 var program;
 
+//HTML/CSS variables
+var gameStarted = false;
+
 // Initial Setup Info
 var Name;
 
@@ -199,14 +202,14 @@ var cardVertices = [
 ];
 
 var playerCardThreeVerts = [
-    vec4(-0.5, -0.95, 0.0, 1.0),
-    vec4(-0.5, -0.45, 0.0, 1.0),
-    vec4(-0.05, -0.45, 0.0, 1.0),
-    vec4(-0.05, -0.95, 0.0, 1.0),
-    vec4(-0.5, -0.95, 0.0, 1.0),
-    vec4(-0.5, -0.45, 0.0, 1.0),
-    vec4(-0.05, -0.45, 0.0, 1.0),
-    vec4(-0.05, -0.95, 0.0, 1.0),
+  vec4(-0.5, -0.95, 0.0, 1.0),
+  vec4(-0.5, -0.45, 0.0, 1.0),
+  vec4(-0.05, -0.45, 0.0, 1.0),
+  vec4(-0.05, -0.95, 0.0, 1.0),
+  vec4(-0.5, -0.95, 0.0, 1.0),
+  vec4(-0.5, -0.45, 0.0, 1.0),
+  vec4(-0.05, -0.45, 0.0, 1.0),
+  vec4(-0.05, -0.95, 0.0, 1.0),
 ];
 
 var playerCardFourVerts = [
@@ -359,16 +362,16 @@ function colorCube() {
 
 function newCardVerts(player, cardCount) {
   var start = 0;
-  if (player == 0){
-    //add a new player card 
-    if (cardCount == 1){
+  if (player == 0) {
+    //add a new player card
+    if (cardCount == 1) {
       //Third card
       start = 24;
       cardVertices.push(...playerCardThreeVerts);
-    } else if (cardCount == 2){
+    } else if (cardCount == 2) {
       start = 32;
       cardVertices.push(...playerCardFourVerts);
-    } else if (cardCount == 3){
+    } else if (cardCount == 3) {
       start = 40;
       cardVertices.push(...playerCardFiveVerts);
     }
@@ -376,19 +379,28 @@ function newCardVerts(player, cardCount) {
     //add new dealer card
   }
   //Add to our color cube
-  newColorCube(start, start+1, start+2, start+3, start+4, start+5, start+6, start+7);
+  newColorCube(
+    start,
+    start + 1,
+    start + 2,
+    start + 3,
+    start + 4,
+    start + 5,
+    start + 6,
+    start + 7
+  );
 }
 
 function newColorCube(a, b, c, d, e, f, g, h) {
-  quad(b+8, a+8, d+8, c+8);
-  quad(c+8, d+8, h+8, g+8);
-  quad(d+8, a+8, e+8, h+8);
-  quad(g+8, f+8, b+8, c+8);
-  quad(e+8, f+8, g+8, h+8);
-  quad(f+8, e+8, a+8, b+8);
+  quad(b + 8, a + 8, d + 8, c + 8);
+  quad(c + 8, d + 8, h + 8, g + 8);
+  quad(d + 8, a + 8, e + 8, h + 8);
+  quad(g + 8, f + 8, b + 8, c + 8);
+  quad(e + 8, f + 8, g + 8, h + 8);
+  quad(f + 8, e + 8, a + 8, b + 8);
 }
 
-function findCardValue( str ) {
+function findCardValue(str) {
   var cardValue;
   switch (str.charAt(0)) {
     case "2":
@@ -462,7 +474,7 @@ function drawCard(start, end, cardID) {
 }
 
 //Dealing initial hand and checking matches
-function dealCards(){
+function dealCards() {
   // cards to be dealt to player and dealer
   playerCard1 = cards[Math.floor(Math.random(0, 52) * max)];
   currentCards.push(playerCard1);
@@ -490,10 +502,10 @@ function dealCards(){
   currentCards.push(dealerCard2);
 
   // calculate player and dealer current card totals
-  var playerCard1Value = findCardValue( playerCard1 );
-  var playerCard2Value = findCardValue( playerCard2 );
-  var dealerCard1Value = findCardValue( dealerCard1 );
-  var dealerCard2Value = findCardValue( dealerCard2 );
+  var playerCard1Value = findCardValue(playerCard1);
+  var playerCard2Value = findCardValue(playerCard2);
+  var dealerCard1Value = findCardValue(dealerCard1);
+  var dealerCard2Value = findCardValue(dealerCard2);
   playerCardCount = playerCard1Value + playerCard2Value;
   dealerCardCount = dealerCard1Value + dealerCard2Value;
   gl.enable(gl.DEPTH_TEST);
@@ -501,24 +513,23 @@ function dealCards(){
 
 // Draw the Cards
 function drawAll() {
-  //Ending 
+  //Ending
   startIndex = 144 - 22;
-  for (i = 4; i < currentCards.length; i += 1){
-      startIndex += 22;
-      drawCard(startIndex, 22, currentCards[i]);
+  for (i = 4; i < currentCards.length; i += 1) {
+    startIndex += 22;
+    drawCard(startIndex, 22, currentCards[i]);
   }
 
-  // Starting 
-  for (var i = 3; i >= 0; i -= 1){
+  // Starting
+  for (var i = 3; i >= 0; i -= 1) {
     var startIndex = 36 * i;
-    if (i == 2 && !dealerPlays){
+    if (i == 2 && !dealerPlays) {
       //Draw behind dealer card
       drawCard(startIndex, 22, "backImage");
     } else {
       drawCard(startIndex, 22, currentCards[i]);
     }
   }
-
 }
 
 window.onload = function init() {
@@ -531,12 +542,17 @@ window.onload = function init() {
   gl.viewport(0, 0, canvas.width, canvas.height);
   gl.clearColor(0.14, 0.58, 0.15, 1.0); //green
 
+  var buttons = document.getElementsByClassName("enable-me");
+
+  Array.from(buttons).forEach((button) => {
+    button.disabled = true;
+  });
+
   // Setup Chips
   createChips();
 
   program = initShaders(gl, "vertex-shader", "fragment-shader");
   gl.useProgram(program);
-
 
   // Buffer for chips
   chipsBuffer = gl.createBuffer();
@@ -562,6 +578,14 @@ window.onload = function init() {
 };
 
 function initialSetup() {
+  if (!gameStarted) {
+    gameStarted = true;
+    var buttons = document.getElementsByClassName("enable-me");
+
+    Array.from(buttons).forEach((button) => {
+      button.disabled = false;
+    });
+  }
   Name = prompt("Username:", "Enter Name");
   if (Name == null || Name == "") {
     Name = "User";
@@ -576,7 +600,6 @@ function initialSetup() {
   while (userStack > 100 || userStack < 10) {
     var userStackInput = prompt("Starting Stack", "(10 - 100, Whole Dollars)");
     while (isNaN(userStackInput)) {
-      console.log("not a number");
       userStackInput = prompt("Starting Stack", "(10 - 100, Whole Dollars)");
     }
     userStack = parseInt(userStackInput);
@@ -1325,7 +1348,7 @@ function dealHand() {
 
 function prepareForHand() {
   dealCards();
-  if (firstHand){
+  if (firstHand) {
     colorCube();
     firstHand = false;
   }
@@ -1333,7 +1356,7 @@ function prepareForHand() {
   state = 3;
 }
 
-function updateDealtCardsBuffer(){
+function updateDealtCardsBuffer() {
   // Buffer for Cards
   cBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, cBuffer);
@@ -1350,11 +1373,10 @@ function updateDealtCardsBuffer(){
   gl.bufferData(gl.ARRAY_BUFFER, flatten(pointsArray), gl.STATIC_DRAW);
 
   //Position for deal
-  a_vPositionHandLoc = gl.getAttribLocation( program, "a_vPositionHand" );
-  gl.vertexAttribPointer( a_vPositionHandLoc, 4, gl.FLOAT, false, 0, 0 );
-  gl.enableVertexAttribArray( a_vPositionHandLoc );
+  a_vPositionHandLoc = gl.getAttribLocation(program, "a_vPositionHand");
+  gl.vertexAttribPointer(a_vPositionHandLoc, 4, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(a_vPositionHandLoc);
 }
-
 
 // function to randomly generate card when hit selected
 function determineHitCard() {
@@ -1362,7 +1384,7 @@ function determineHitCard() {
 
   var duplicateCard = currentCards.find((card) => {
     return card == hitCard;
-  })
+  });
 
   if (!duplicateCard) {
     currentCards.push(hitCard);
@@ -1372,7 +1394,7 @@ function determineHitCard() {
   }
 }
 
-function resetBetBuffers(){
+function resetBetBuffers() {
   currentCards = [];
   document.getElementsByClassName(
     "betting-actions-container"
@@ -1412,10 +1434,10 @@ function resetBetBuffers(){
   gl.disable(gl.DEPTH_TEST);
 }
 
-function updatePlayerCardCount( newCard ) {
-  var newCardValue = findCardValue( newCard );
+function updatePlayerCardCount(newCard) {
+  var newCardValue = findCardValue(newCard);
   playerCardCount += newCardValue;
-  setTimeout(function () { 
+  setTimeout(function () {
     if (playerCardCount > 21 && userStack == 0) {
       alert("Bust! You have lost.");
       originalStack = 0;
@@ -1432,15 +1454,15 @@ function playerHit() {
   playerCount += 1;
   newCardVerts(0, playerCount);
   updateDealtCardsBuffer();
-  updatePlayerCardCount( nextPlayerCard );
+  updatePlayerCardCount(nextPlayerCard);
 }
 
-function stayHit(){
+function stayHit() {
   dealerPlays = true;
-  setTimeout(function () { 
+  setTimeout(function () {
     if (playerCardCount > dealerCardCount) {
       alert("You Win!");
-      userStack += (2 * currentBet);
+      userStack += 2 * currentBet;
     } else if (playerCardCount == dealerCardCount) {
       // get your money back
       alert("Push!");
@@ -1454,8 +1476,23 @@ function stayHit(){
   }, 500);
 }
 
+function handleSplitCards() {
+  if (currentCards.length != 2) {
+    alert("You can't split unless you have exactly 2 cards!");
+    return;
+  } else if (currentCards[0][0] != currentCards[1][0]) {
+    alert("You can only split if you have a pair!");
+    return;
+  } else {
+    //LOGIC for splitting cards
+  }
+}
+
+function handleDoubleDown() {}
+
 function render() {
   gl.clear(gl.COLOR_BUFFER_BIT);
+  console.log("gameStarted: ", gameStarted);
 
   if (state == 1) {
     createBetArea();
@@ -1465,6 +1502,6 @@ function render() {
   } else if (state == 3) {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     drawAll();
-  } 
+  }
   window.requestAnimFrame(render);
 }

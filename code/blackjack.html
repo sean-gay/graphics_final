@@ -99,19 +99,31 @@
         </div>
 
         <div class="betting-actions-container">
-          <button class="remove-last-bet" onclick="removeLastBet()">
+          <button
+            class="remove-last-bet enable-me"
+            disabled="true"
+            onclick="removeLastBet()"
+          >
             Remove Last Bet
           </button>
-          <button class="clear-all-bets" onclick="clearBets()">
+          <button
+            class="clear-all-bets enable-me"
+            disabled="true"
+            onclick="clearBets()"
+          >
             Clear All Bets
           </button>
-          <button class="deal-hand" onclick="dealHand()">
+          <button
+            class="deal-hand enable-me"
+            disabled="true"
+            onclick="dealHand()"
+          >
             Deal Hand &#65293;&#65293;>
           </button>
         </div>
 
         <div class="hand-actions-container">
-          <button class="hit-card" onclick="playerHit()">Hit Card</button>
+          <button class="hit-card" onclick="playerHit()">Hit Card +1</button>
           <button class="stay-card" onclick="stayHit()">Stay Card</button>
           <button class="split-card">Split Cards</button>
           <button class="double-down-card">Double Down</button>
