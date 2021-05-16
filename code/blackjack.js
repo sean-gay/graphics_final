@@ -1789,9 +1789,14 @@ function stayHit() {
     } else {
       alert("You Lose!");
     }
+    playerCount = 0;
+    flipCardOnce = false;
+    flipCard = false;
     resetBetBuffers();
     dealerPlays = false;
     originalStack = userStack;
+    pmHandLocal = mat4(1.0);
+    useRightTexture = false;
   }, 10000);
 }
 
@@ -1813,7 +1818,6 @@ function handleDoubleDown() {
 
 function render() {
   gl.clear(gl.COLOR_BUFFER_BIT);
-  console.log("gameStarted: ", gameStarted);
 
   if (state == 1) {
     createBetArea();
