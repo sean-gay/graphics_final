@@ -12,6 +12,7 @@ var program;
 
 //HTML/CSS variables
 var gameStarted = false;
+var canDouble = false;
 
 // Initial Setup Info
 var Name;
@@ -543,10 +544,16 @@ function dealCards() {
   // calculate player and dealer current card totals
   var playerCard1Value = findCardValue(playerCard1);
   var playerCard2Value = findCardValue(playerCard2);
+
   var dealerCard1Value = findCardValue(dealerCard1);
   var dealerCard2Value = findCardValue(dealerCard2);
   playerCardCount = playerCard1Value + playerCard2Value;
   dealerCardCount = dealerCard1Value + dealerCard2Value;
+
+  // See if we can double down
+  if ((playerCardCount == 9) || (playerCardCount == 10) || (playerCardCount == 11)){
+    canDouble = true;
+  }
   gl.enable(gl.DEPTH_TEST);
 }
 
@@ -1392,10 +1399,20 @@ function animateDeal(){
   centerCardThreeX -= 0.015;
   centerCardFourX -= 0.015;
   if(centerCardOneY < 0){
-    state = 3;
+    if (playerCardCount == 21){
+      //Natural
+      state = 7;
+    } else {
+      state = 3;
+    }
     return
   } else if (centerCardTwoY < 0){
-    state = 3;
+    if (playerCardCount == 21){
+      //Natural
+      state = 7;
+    } else {
+      state = 3;
+    }
     return
   } 
 
@@ -1466,16 +1483,25 @@ function animateHit(){
 
   if (playerCount == 1){
     centerCardFiveY -= 0.04;
+    if (playerCardCount == 21){
+      stayHit();
+    }
   } else if (playerCount == 2){
     centerCardFiveY = 0.0;
     centerCardSixY -= 0.04;
+    if (playerCardCount == 21){
+      stayHit();
+    }
   }
 
   if (centerCardFiveY <= 0.0){
     centerCardFiveY = 0.0;
     if (playerCardCount > 21 && userStack == 0) {
       alert("Bust! You have lost.");
+      resetBetBuffers();
       originalStack = 0;
+      playerCount = 0;
+      return;
     } else if (playerCardCount > 21 && userStack > 0) {
       alert("Bust!");
       originalStack = userStack;
@@ -1489,7 +1515,9 @@ function animateHit(){
     centerCardSixY = 0.0;
     if (playerCardCount > 21 && userStack == 0) {
       alert("Bust! You have lost.");
+      resetBetBuffers();
       originalStack = 0;
+      playerCount = 0;
     } else if (playerCardCount > 21 && userStack > 0) {
       alert("Bust!");
       originalStack = userStack;
@@ -1685,7 +1713,10 @@ function animateDealer(){
   }
 
   if (endGameAnimations == true){
-    if (playerCardCount > dealerCardCount) {
+    if (dealerCardCount > 21){
+      alert("You Win!");
+      userStack += 2 * currentBet;
+    } else if (playerCardCount > dealerCardCount) {
       alert("You Win!");
       userStack += 2 * currentBet;
     } else if (playerCardCount == dealerCardCount) {
@@ -1859,6 +1890,23 @@ function stayHit() {
   }
 }
 
+function natural(){
+  alert("Natural: You Win 1.5X!");
+  userStack += currentBet + (1.5*currentBet);
+  //Reset state variables
+  playerCount = 0;
+  flipCardOnce = false;
+  flipCard = false;
+  resetBetBuffers();
+  dealerPlays = false;
+  originalStack = userStack;
+  pmHandLocal = mat4(1.0);
+  useRightTexture = false;
+  endGameAnimations = false; 
+  onlyDealOnce = false;
+  dealerCardCount = 0;
+}
+
 function handleSplitCards() {
   if (currentCards.length != 2) {
     alert("You can't split unless you have exactly 2 cards!");
@@ -1872,6 +1920,12 @@ function handleSplitCards() {
 }
 
 function handleDoubleDown() {
+  if (canDouble != true){
+    alert("You need to be dealt a 9,10, or 11 to Double Down!");
+  } else {
+    userStack -= currentBet;
+    currentBet *= 2;
+  }
 
 }
 
@@ -1898,6 +1952,9 @@ function render() {
     // dealer plays
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     animateDealer();
+  } else if (state == 7){
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    natural();
   }
   window.requestAnimFrame(render);
 }
