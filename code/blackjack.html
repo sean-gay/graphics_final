@@ -125,8 +125,12 @@
         <div class="hand-actions-container">
           <button class="hit-card" onclick="playerHit()">Hit Card +1</button>
           <button class="stay-card" onclick="stayHit()">Stand</button>
+<<<<<<< HEAD
           <button class="split-card">Split Cards</button>
           <button class="double-down-card" onclick="handleDoubleDown()">Double Down</button>
+=======
+          <button class="double-down-card">Double Down</button>
+>>>>>>> bc447cf... removing some html elements since we're not using them
         </div>
       </div>
 
@@ -140,7 +144,7 @@
             <p class="better-name">Name:</p>
             <p class="better-stack">Stack:</p>
             <p class="current-bet-amount">Current Bet:</p>
-            <p class="current-hand-value">Current Hand Value:</p>
+            <p class="current-hand-value">Current Hand Value: N/A</p>
           </div>
           <div class="content-divider">
             <hr class="dashed" />
@@ -156,7 +160,7 @@
               clicking on the chips found on the screen to the left. Your
               personal betting info can be found right below these instructions.
               Please note that the maximum amount you can bet in one turn is
-              $100. Good luck!
+              $100, and the amount of times you can hit (after receiving your initial cards) in a turn is 2 times. Good luck!
             </p>
             <div class="start-game-container">
               <button class="start-button" onclick="initialSetup()">

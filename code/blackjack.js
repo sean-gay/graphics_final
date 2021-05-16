@@ -294,7 +294,7 @@ rxyz = [
 
 var rxyzLocal;
 
-// Set up rotation 
+// Set up rotation
 var rotationSpeed = 3.0;
 var anglesLocal = (Math.PI / 180) * rotationSpeed;
 var cLocal = Math.cos(anglesLocal);
@@ -550,10 +550,13 @@ function dealCards() {
   playerCardCount = playerCard1Value + playerCard2Value;
   dealerCardCount = dealerCard1Value + dealerCard2Value;
 
+
   // See if we can double down
   if ((playerCardCount == 9) || (playerCardCount == 10) || (playerCardCount == 11)){
     canDouble = true;
   }
+  document.getElementsByClassName("current-hand-value")[0].innerHTML = `Current Hand Value: ${playerCardCount}`;
+
   gl.enable(gl.DEPTH_TEST);
 }
 
@@ -1414,16 +1417,16 @@ function animateDeal(){
       state = 3;
     }
     return
-  } 
+  }
 
   if (centerCardThreeX <= 0){
     centerCardThreeX = 0;
-  } 
-  
+  }
+
   if (centerCardFourX <= 0){
     centerCardFourX = 0;
   }
-  
+
   var cardID;
   var translateY = 0.0
   var translateX = 0.0;
@@ -1691,7 +1694,7 @@ function animateDealer(){
     gl.uniform1i(u_textureSamplerLoc, 0);
 
     //Set Hand Matrix
-    u_ctMatrixHandLoc = gl.getUniformLocation(program, "u_ctMatrixHand");    
+    u_ctMatrixHandLoc = gl.getUniformLocation(program, "u_ctMatrixHand");
     pmHand = mult(rxyz[axis], pmHand);
 
     if ((flipCard == true) && (i == 2)){
@@ -1699,7 +1702,7 @@ function animateDealer(){
     } else {
       ctMatrix = mult(ortho(-1, 1, -1, 1, -1, 1), pmHand);
     }
-    
+
 
     tm = translate(translateX, translateY, 0.0);
     ctMatrix = mult(tm, ctMatrix);
@@ -1735,7 +1738,7 @@ function animateDealer(){
     originalStack = userStack;
     pmHandLocal = mat4(1.0);
     useRightTexture = false;
-    endGameAnimations = false; 
+    endGameAnimations = false;
     onlyDealOnce = false;
     dealerCardCount = 0;
   }
@@ -1840,9 +1843,10 @@ function resetBetBuffers() {
 function updatePlayerCardCount(newCard) {
   var newCardValue = findCardValue(newCard);
   playerCardCount += newCardValue;
+  document.getElementsByClassName("current-hand-value")[0].innerHTML = `Current Hand Value: ${playerCardCount}`;
 }
 
-function playerHit() { 
+function playerHit() {
   state = 5;
   var nextPlayerCard = determineHitCard();
   playerCount += 1;
@@ -1880,7 +1884,7 @@ function stayHit() {
     centerCardSixX = 0.5;
     centerCardSixY = 2.0;
   } else if (playerCount == 2){
-    //Two hits 
+    //Two hits
     centerCardSevenX = 0.5;
     centerCardSevenY = 2.0;
   } else {
@@ -1902,22 +1906,11 @@ function natural(){
   originalStack = userStack;
   pmHandLocal = mat4(1.0);
   useRightTexture = false;
-  endGameAnimations = false; 
+  endGameAnimations = false;
   onlyDealOnce = false;
   dealerCardCount = 0;
 }
 
-function handleSplitCards() {
-  if (currentCards.length != 2) {
-    alert("You can't split unless you have exactly 2 cards!");
-    return;
-  } else if (currentCards[0][0] != currentCards[1][0]) {
-    alert("You can only split if you have a pair!");
-    return;
-  } else {
-    //LOGIC for splitting cards
-  }
-}
 
 function handleDoubleDown() {
   if (canDouble != true){
