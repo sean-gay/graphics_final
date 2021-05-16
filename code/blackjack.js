@@ -109,6 +109,9 @@ var centerCardFiveY = 0.0;
 var centerCardSixX = 0.0;
 var centerCardSixY = 0.0;
 var pmHandLocal = mat4(1.0);
+var flipCardOnce = false;
+var flipCard = false;
+var useRightTexture = false;
 
 var cBuffer;
 var a_vColorHandLoc;
@@ -1517,12 +1520,14 @@ function animateDealer(){
   var cardID;
   var translateY = 0.0
   var translateX = 0.0;
-  var flipCard = false;
 
   centerCardFourX -= 0.02;
-  if (centerCardFourX <= -0.4){
+  if (centerCardFourX < -0.4){
     centerCardFourX = -0.4;
-    flipCard = true;
+    if (flipCardOnce == false){
+      flipCardOnce = true;
+      flipCard = true;
+    }
   }
 
   var start = 0;
@@ -1538,12 +1543,22 @@ function animateDealer(){
       translateY = centerCardTwoY;
     } else if (i == 2){
       translateY = 0.0;
-      cardID = "backImage";
+      if(useRightTexture){
+        cardID = currentCards[i];
+      } else {
+        cardID = "backImage";
+      }
       if (flipCard == true){
         pmHandLocal = mult(rxyzLocal[axis], pmHandLocal);
         centerCardThreeX += 0.025;
         if (centerCardThreeX >= 0.7){
           cardID = currentCards[i];
+          if (centerCardThreeX >= 1.4){
+            //stop animation
+            flipCard = false;
+            useRightTexture = true;
+            centerCardThreeX = 0;
+          }
         }
       }
       translateX = centerCardThreeX;
