@@ -108,10 +108,16 @@ var centerCardFiveX = 0.0;
 var centerCardFiveY = 0.0;
 var centerCardSixX = 0.0;
 var centerCardSixY = 0.0;
+var centerCardSevenX = 0.0;
+var centerCardSevenY = 0.0;
+
 var pmHandLocal = mat4(1.0);
 var flipCardOnce = false;
 var flipCard = false;
 var useRightTexture = false;
+var endGameAnimations = false;
+var onlyDealOnce = false;
+var doneDealing = false;
 
 var cBuffer;
 var a_vColorHandLoc;
@@ -1479,7 +1485,7 @@ function animateHit(){
     }
   }
 
-  if (centerCardSixY <= 0.0){
+  if ((playerCount == 2) && (centerCardSixY <= 0.0)){
     centerCardSixY = 0.0;
     if (playerCardCount > 21 && userStack == 0) {
       alert("Bust! You have lost.");
@@ -1567,6 +1573,29 @@ function animateDealer(){
     }
   }
 
+  if (onlyDealOnce == true){
+    if (playerCount == 0){
+      centerCardFiveY -= 0.02;
+      if (centerCardFiveY < 1.4){
+        centerCardFiveY = 1.4;
+        endGameAnimations = true;
+      }
+    } else if (playerCount == 1){
+      centerCardSixY -= 0.02;
+      if (centerCardSixY < 1.4){
+        centerCardSixY = 1.4;
+        endGameAnimations = true;
+      }
+    } else {
+      centerCardSevenY -= 0.02;
+      if (centerCardSevenY < 1.4){
+        centerCardSevenY = 1.4;
+        endGameAnimations = true;
+      }
+
+    }
+  }
+
   var start = 0;
   for (var i = currentCards.length - 1; i >= 0; i -= 1) {
     cardID = currentCards[i];
@@ -1595,6 +1624,16 @@ function animateDealer(){
             flipCard = false;
             useRightTexture = true;
             centerCardThreeX = 0;
+            // time to check dealer totals and such
+            if ((dealerCardCount >= 17) && (onlyDealOnce == false)){
+              //Cannot hit, just end game
+              endGameAnimations = true;
+            } else if ((dealerCardCount < 17) && (onlyDealOnce == false)){
+              onlyDealOnce = true;
+              var nextDealerCard = determineHitCard();
+              var newCardValue = findCardValue(nextDealerCard);
+              dealerCardCount += newCardValue;
+            }
           }
         }
       }
@@ -1643,6 +1682,31 @@ function animateDealer(){
     gl.bindBuffer(gl.ARRAY_BUFFER, tBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, flatten(texCoordsArray), gl.STATIC_DRAW);
     gl.drawArrays(gl.TRIANGLES, start, 22);
+  }
+
+  if (endGameAnimations == true){
+    if (playerCardCount > dealerCardCount) {
+      alert("You Win!");
+      userStack += 2 * currentBet;
+    } else if (playerCardCount == dealerCardCount) {
+      // get your money back
+      alert("Push!");
+      userStack += currentBet;
+    } else {
+      alert("You Lose!");
+    }
+    //Reset state variables
+    playerCount = 0;
+    flipCardOnce = false;
+    flipCard = false;
+    resetBetBuffers();
+    dealerPlays = false;
+    originalStack = userStack;
+    pmHandLocal = mat4(1.0);
+    useRightTexture = false;
+    endGameAnimations = false; 
+    onlyDealOnce = false;
+    dealerCardCount = 0;
   }
 
 }
@@ -1763,8 +1827,10 @@ function playerHit() {
   centerCardFourY = 0.0;
   centerCardFiveX = 0.4;
   centerCardFiveY = 2.0;
-  centerCardSixX = 0.6;
-  centerCardSixY = 2.0;
+  if (playerCount == 2){
+    centerCardSixX = 0.6;
+    centerCardSixY = 2.0;
+  }
 }
 
 function stayHit() {
@@ -1778,26 +1844,19 @@ function stayHit() {
   centerCardFourX = 0.0;
   centerCardFourY = 0.0;
 
-  setTimeout(function () {
-    if (playerCardCount > dealerCardCount) {
-      alert("You Win!");
-      userStack += 2 * currentBet;
-    } else if (playerCardCount == dealerCardCount) {
-      // get your money back
-      alert("Push!");
-      userStack += currentBet;
-    } else {
-      alert("You Lose!");
-    }
-    playerCount = 0;
-    flipCardOnce = false;
-    flipCard = false;
-    resetBetBuffers();
-    dealerPlays = false;
-    originalStack = userStack;
-    pmHandLocal = mat4(1.0);
-    useRightTexture = false;
-  }, 10000);
+  if (playerCount == 1){
+    //One hit
+    centerCardSixX = 0.5;
+    centerCardSixY = 2.0;
+  } else if (playerCount == 2){
+    //Two hits 
+    centerCardSevenX = 0.5;
+    centerCardSevenY = 2.0;
+  } else {
+    // No hits
+    centerCardFiveX = 0.5;
+    centerCardFiveY = 2.0;
+  }
 }
 
 function handleSplitCards() {
