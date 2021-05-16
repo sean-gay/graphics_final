@@ -1458,10 +1458,43 @@ function animateHit(){
   var translateY = 0.0
   var translateX = 0.0;
 
-  centerCardFiveY -= 0.02;
+  if (playerCount == 1){
+    centerCardFiveY -= 0.04;
+  } else if (playerCount == 2){
+    centerCardFiveY = 0.0;
+    centerCardSixY -= 0.04;
+  }
+
   if (centerCardFiveY <= 0.0){
     centerCardFiveY = 0.0;
+    if (playerCardCount > 21 && userStack == 0) {
+      alert("Bust! You have lost.");
+      originalStack = 0;
+    } else if (playerCardCount > 21 && userStack > 0) {
+      alert("Bust!");
+      originalStack = userStack;
+      resetBetBuffers();
+      playerCount = 0;
+      return
+    }
   }
+
+  if (centerCardSixY <= 0.0){
+    centerCardSixY = 0.0;
+    if (playerCardCount > 21 && userStack == 0) {
+      alert("Bust! You have lost.");
+      originalStack = 0;
+    } else if (playerCardCount > 21 && userStack > 0) {
+      alert("Bust!");
+      originalStack = userStack;
+      resetBetBuffers();
+      playerCount = 0;
+      return
+    }
+  }
+
+
+
   var start = 0;
   for (var i = currentCards.length - 1; i >= 0; i -= 1) {
     cardID = currentCards[i];
@@ -1483,6 +1516,10 @@ function animateHit(){
       start = 0;
       translateX = centerCardFiveX;
       translateY = centerCardFiveY;
+    } else if (i == 5){
+      start = 0;
+      translateX = centerCardSixX;
+      translateY = centerCardSixY;
     }
 
     var image = document.getElementById(cardID);
@@ -1569,6 +1606,10 @@ function animateDealer(){
       start = 0;
       translateX = centerCardFiveX;
       translateY = centerCardFiveY;
+    } else if (i == 5){
+      start = 0;
+      translateX = centerCardSixX;
+      translateY = centerCardSixY;
     }
 
     var image = document.getElementById(cardID);
@@ -1704,16 +1745,6 @@ function resetBetBuffers() {
 function updatePlayerCardCount(newCard) {
   var newCardValue = findCardValue(newCard);
   playerCardCount += newCardValue;
-  setTimeout(function () {
-    if (playerCardCount > 21 && userStack == 0) {
-      alert("Bust! You have lost.");
-      originalStack = 0;
-    } else if (playerCardCount > 21 && userStack > 0) {
-      alert("Bust!");
-      originalStack = userStack;
-      resetBetBuffers();
-    }
-  }, 2000);
 }
 
 function playerHit() { 
@@ -1730,8 +1761,10 @@ function playerHit() {
   centerCardThreeY = 0.0;
   centerCardFourX = 0.0;
   centerCardFourY = 0.0;
-  centerCardFiveX = 0.1;
+  centerCardFiveX = 0.4;
   centerCardFiveY = 2.0;
+  centerCardSixX = 0.6;
+  centerCardSixY = 2.0;
 }
 
 function stayHit() {
