@@ -95,6 +95,16 @@ var currentCards = [];
 var max = 52;
 var playerCount = 0;
 
+  //animation for cards
+var centerCardOneX = 0.0;
+var centerCardOneY = 0.0;
+var centerCardTwoX = 0.0;
+var centerCardTwoY = 0.0;
+var centerCardThreeX = 0.0;
+var centerCardThreeY = 0.0;
+var centerCardFourX = 0.0;
+var centerCardFourY = 0.0;
+
 var cBuffer;
 var a_vColorHandLoc;
 var vBuffer;
@@ -1346,6 +1356,79 @@ function dealHand() {
   }
 }
 
+function animateDeal(){
+  var tm;
+  centerCardOneY -= 0.025;
+  centerCardTwoY -= 0.025;
+  centerCardThreeX -= 0.015;
+  centerCardFourX -= 0.015;
+  if(centerCardOneY < 0){
+    state = 3;
+    return
+  } else if (centerCardTwoY < 0){
+    state = 3;
+    return
+  } 
+
+  if (centerCardThreeX <= 0){
+    centerCardThreeX = 0;
+  } 
+  
+  if (centerCardFourX <= 0){
+    centerCardFourX = 0;
+  }
+  
+  var cardID;
+  var translateY = 0.0
+  var translateX = 0.0;
+  var start = 0;
+  for (var i = 3; i >= 0; i -= 1) {
+    cardID = currentCards[i];
+    start = i * 36;
+    if (i == 0){
+      translateX = 0.0;
+      translateY = centerCardOneY;
+    } else if (i == 1){
+      translateX = centerCardTwoX;
+      translateY = centerCardTwoY;
+    } else if (i == 2){
+      translateX = centerCardThreeX;
+      translateY = 0.0;
+      cardID = "backImage";
+    } else {
+      translateX = centerCardFourX;
+      translateY = 0.0;
+    }
+
+    var image = document.getElementById(cardID);
+    configureTexture(image);
+
+    a_vTexCoordLoc = gl.getAttribLocation(program, "a_vTexCoord");
+    gl.vertexAttribPointer(a_vTexCoordLoc, 2, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(a_vTexCoordLoc);
+
+    gl.activeTexture(gl.TEXTURE0);
+    u_textureSamplerLoc = gl.getUniformLocation(program, "u_textureSampler");
+    gl.uniform1i(u_textureSamplerLoc, 0);
+
+    //Set Hand Matrix
+    u_ctMatrixHandLoc = gl.getUniformLocation(program, "u_ctMatrixHand");
+
+    pmHand = mult(rxyz[axis], pmHand);
+    ctMatrix = mult(ortho(-1, 1, -1, 1, -1, 1), pmHand);
+
+    tm = translate(translateX, translateY, 0.0);
+    ctMatrix = mult(tm, ctMatrix);
+    gl.uniformMatrix4fv(u_ctMatrixHandLoc, false, flatten(ctMatrix));
+
+    //Texture buffer settings
+    tBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, tBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, flatten(texCoordsArray), gl.STATIC_DRAW);
+    gl.drawArrays(gl.TRIANGLES, start, 22);
+  }
+}
+
 function prepareForHand() {
   dealCards();
   if (firstHand) {
@@ -1353,7 +1436,14 @@ function prepareForHand() {
     firstHand = false;
   }
   updateDealtCardsBuffer();
-  state = 3;
+  centerCardOneY = 2.0;
+  centerCardTwoX = 0.0;
+  centerCardTwoY = 2.0;
+  centerCardThreeX = 1.0;
+  centerCardThreeY = 0.0;
+  centerCardFourX = 1.0;
+  centerCardFourY = 0.0;
+  state = 4;
 }
 
 function updateDealtCardsBuffer() {
@@ -1488,7 +1578,9 @@ function handleSplitCards() {
   }
 }
 
-function handleDoubleDown() {}
+function handleDoubleDown() {
+
+}
 
 function render() {
   gl.clear(gl.COLOR_BUFFER_BIT);
@@ -1502,6 +1594,10 @@ function render() {
   } else if (state == 3) {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     drawAll();
+  } else if (state == 4) {
+    //animate cards dealt in
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    animateDeal();
   }
   window.requestAnimFrame(render);
 }
