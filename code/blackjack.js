@@ -1549,6 +1549,7 @@ function playerHit() {
 
 function stayHit() {
   dealerPlays = true;
+  
   setTimeout(function () {
     if (playerCardCount > dealerCardCount) {
       alert("You Win!");
