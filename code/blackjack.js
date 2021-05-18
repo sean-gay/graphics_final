@@ -119,6 +119,8 @@ var useRightTexture = false;
 var endGameAnimations = false;
 var onlyDealOnce = false;
 var doneDealing = false;
+var flipX = false;
+var moveXBack;
 
 var cBuffer;
 var a_vColorHandLoc;
@@ -1587,7 +1589,7 @@ function animateHit(){
 }
 
 function animateDealer(){
-  var tm, rm;
+  var tm, sm;
   var cardID;
   var translateY = 0.0
   var translateX = 0.0;
@@ -1647,9 +1649,11 @@ function animateDealer(){
         centerCardThreeX += 0.025;
         if (centerCardThreeX >= 0.7){
           cardID = currentCards[i];
-          if (centerCardThreeX >= 1.4){
+          flipX = true;
+          if (centerCardThreeX >= 1.5){
             //stop animation
             flipCard = false;
+            flipX = false;
             useRightTexture = true;
             centerCardThreeX = 0;
             // time to check dealer totals and such
@@ -1700,8 +1704,15 @@ function animateDealer(){
       ctMatrix = mult(ortho(-1, 1, -1, 1, -1, 1), pmHand);
     }
     
+    if ((flipX == true) && (i == 2)){
+      sm = scalem(-1.0, 1.0, 1.0);
+      ctMatrix = mult(sm, ctMatrix);
+      moveXBack = 1.5 - centerCardThreeX ;
+      tm = translate(moveXBack, translateY, 0.0);
+    } else {
+      tm = translate(translateX, translateY, 0.0);
+    }
 
-    tm = translate(translateX, translateY, 0.0);
     ctMatrix = mult(tm, ctMatrix);
     gl.uniformMatrix4fv(u_ctMatrixHandLoc, false, flatten(ctMatrix));
 
