@@ -80,6 +80,7 @@ var dealerPlays = false;
 var firstHand = true;
 var canInsure = false;
 var loseInsure = false;
+var doubledDown = false;
 
 // Cards
 // Logic Porting Over From Outside Work
@@ -1505,7 +1506,7 @@ function animateHit(){
   }
 
   if ((centerCardFiveY <= 0.0) && (playerCount == 1)){
-    centerCardFiveY = 0.0;
+    centerCardFiveY = 0.0; 
     if (playerCardCount > 21 && userStack == 0) {
       alert("Bust! You have lost.");
       resetBetBuffers();
@@ -1536,6 +1537,8 @@ function animateHit(){
       dealerCardCount = 0;
       playerCardCount = 0;
       return
+    } else if (doubledDown){
+      stayHit()
     }
   }
 
@@ -1981,11 +1984,22 @@ function handleSplitCards() {
 }
 
 function handleDoubleDown() {
+  console.log("inside")
   if (canDouble != true){
     alert("You need to be dealt a 9,10, or 11 to Double Down!");
   } else {
     userStack -= currentBet;
     currentBet *= 2;
+    document.getElementsByClassName(
+      "current-bet-amount"
+    )[0].textContent = `Current Bet Amount: $${currentBet}`;
+    document.getElementsByClassName(
+      "better-stack"
+    )[0].textContent = `Stack: $${userStack.toString()}`;
+    canDouble = false;
+    playerHit();
+    doubledDown = true;
+
   }
 
 }
@@ -2001,7 +2015,7 @@ function insurance(){
     return
   } 
 
-  alert("Insuring 1/2 of your bet: ", insuranceBet);
+  alert("Insuring 1/2 of your bet: " + (insuranceBet).toString);
   
   if (loseInsure){
     alert("No Dealer Blackjack! Lose your insurance", insuranceBet);
@@ -2009,20 +2023,20 @@ function insurance(){
   } else {
     alert("Blackjack for Dealer! You win your insurance!!", insuranceBet);
     userStack = userStack + currentBet;
+    playerCount = 0;
+    flipCardOnce = false;
+    flipCard = false;
+    resetBetBuffers();
+    dealerPlays = false;
+    originalStack = userStack;
+    pmHandLocal = mat4(1.0);
+    useRightTexture = false;
+    endGameAnimations = false; 
+    onlyDealOnce = false;
+    dealerCardCount = 0;
+    playerCardCount = 0;
   }
 
-  playerCount = 0;
-  flipCardOnce = false;
-  flipCard = false;
-  resetBetBuffers();
-  dealerPlays = false;
-  originalStack = userStack;
-  pmHandLocal = mat4(1.0);
-  useRightTexture = false;
-  endGameAnimations = false; 
-  onlyDealOnce = false;
-  dealerCardCount = 0;
-  playerCardCount = 0;
 }
 
 function render() {
