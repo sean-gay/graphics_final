@@ -2081,6 +2081,7 @@ function render() {
   } else if (state == 4) {
     //animate cards dealt in
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    document.getElementsByClassName("current-hand-value")[0].innerHTML = `Current Hand Value: ${playerCardCount}`;
     animateDeal();
     document.getElementsByClassName("current-game-stage")[0].textContent =
       "Game Stage: Perform Card Actions";
