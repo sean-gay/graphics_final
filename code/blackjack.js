@@ -1907,7 +1907,12 @@ function resetBetBuffers() {
 function updatePlayerCardCount(newCard) {
   var newCardValue = findCardValue(newCard);
   playerCardCount += newCardValue;
-  document.getElementsByClassName("current-hand-value")[0].innerHTML = `Current Hand Value: ${playerCardCount}`;
+  if(playerCardCount > 21){
+    document.getElementsByClassName("current-hand-value")[0].innerHTML = `Current Hand Value: BUST!`;
+  }else {
+    document.getElementsByClassName("current-hand-value")[0].innerHTML = `Current Hand Value: ${playerCardCount}`;
+  }
+
 }
 
 function disableButtons(className) {
