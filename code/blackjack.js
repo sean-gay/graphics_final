@@ -299,7 +299,7 @@ rxyz = [
 
 var rxyzLocal;
 
-// Set up rotation 
+// Set up rotation
 var rotationSpeed = 3.0;
 var anglesLocal = (Math.PI / 180) * rotationSpeed;
 var cLocal = Math.cos(anglesLocal);
@@ -1425,16 +1425,16 @@ function animateDeal(){
       state = 3;
     }
     return
-  } 
+  }
 
   if (centerCardThreeX <= 0){
     centerCardThreeX = 0;
-  } 
-  
+  }
+
   if (centerCardFourX <= 0){
     centerCardFourX = 0;
   }
-  
+
   var cardID;
   var translateY = 0.0
   var translateX = 0.0;
@@ -1484,9 +1484,11 @@ function animateDeal(){
     gl.bufferData(gl.ARRAY_BUFFER, flatten(texCoordsArray), gl.STATIC_DRAW);
     gl.drawArrays(gl.TRIANGLES, start, 22);
   }
+  enableButton("hand-action");
 }
 
 function animateHit(){
+  disableButtons("hand-action");
   var tm;
   var cardID;
   var translateY = 0.0
@@ -1506,7 +1508,7 @@ function animateHit(){
   }
 
   if ((centerCardFiveY <= 0.0) && (playerCount == 1)){
-    centerCardFiveY = 0.0; 
+    centerCardFiveY = 0.0;
     if (playerCardCount > 21 && userStack == 0) {
       alert("Bust! You have lost.");
       resetBetBuffers();
@@ -1517,10 +1519,11 @@ function animateHit(){
       dealerPlays = false;
       pmHandLocal = mat4(1.0);
       useRightTexture = false;
-      endGameAnimations = false; 
+      endGameAnimations = false;
       onlyDealOnce = false;
       dealerCardCount = 0;
       playerCardCount = 0;
+      enableButton("hand-action");
       return
     } else if (playerCardCount > 21 && userStack > 0) {
       alert("Bust!");
@@ -1532,13 +1535,15 @@ function animateHit(){
       dealerPlays = false;
       pmHandLocal = mat4(1.0);
       useRightTexture = false;
-      endGameAnimations = false; 
+      endGameAnimations = false;
       onlyDealOnce = false;
       dealerCardCount = 0;
       playerCardCount = 0;
+      enableButton("hand-action");
       return
     } else if (doubledDown){
       stayHit()
+      enableButton("hand-action");
     }
   }
 
@@ -1554,10 +1559,11 @@ function animateHit(){
       dealerPlays = false;
       pmHandLocal = mat4(1.0);
       useRightTexture = false;
-      endGameAnimations = false; 
+      endGameAnimations = false;
       onlyDealOnce = false;
       dealerCardCount = 0;
       playerCardCount = 0;
+      enableButton("hand-action");
     } else if (playerCardCount > 21 && userStack > 0) {
       alert("Bust!");
       originalStack = userStack;
@@ -1568,10 +1574,11 @@ function animateHit(){
       dealerPlays = false;
       pmHandLocal = mat4(1.0);
       useRightTexture = false;
-      endGameAnimations = false; 
+      endGameAnimations = false;
       onlyDealOnce = false;
       dealerCardCount = 0;
       playerCardCount = 0;
+      enableButton("hand-action");
       return
     }
   }
@@ -1632,6 +1639,8 @@ function animateHit(){
     gl.bufferData(gl.ARRAY_BUFFER, flatten(texCoordsArray), gl.STATIC_DRAW);
     gl.drawArrays(gl.TRIANGLES, start, 22);
   }
+
+  enableButton("hand-action");
 
 }
 
@@ -1741,7 +1750,7 @@ function animateDealer(){
     gl.uniform1i(u_textureSamplerLoc, 0);
 
     //Set Hand Matrix
-    u_ctMatrixHandLoc = gl.getUniformLocation(program, "u_ctMatrixHand");    
+    u_ctMatrixHandLoc = gl.getUniformLocation(program, "u_ctMatrixHand");
     pmHand = mult(rxyz[axis], pmHand);
 
     if ((flipCard == true) && (i == 2)){
@@ -1749,7 +1758,7 @@ function animateDealer(){
     } else {
       ctMatrix = mult(ortho(-1, 1, -1, 1, -1, 1), pmHand);
     }
-    
+
     if ((flipX == true) && (i == 2)){
       sm = scalem(-1.0, 1.0, 1.0);
       ctMatrix = mult(sm, ctMatrix);
@@ -1792,7 +1801,7 @@ function animateDealer(){
     originalStack = userStack;
     pmHandLocal = mat4(1.0);
     useRightTexture = false;
-    endGameAnimations = false; 
+    endGameAnimations = false;
     onlyDealOnce = false;
     dealerCardCount = 0;
     playerCardCount = 0;
@@ -1898,9 +1907,26 @@ function resetBetBuffers() {
 function updatePlayerCardCount(newCard) {
   var newCardValue = findCardValue(newCard);
   playerCardCount += newCardValue;
+  document.getElementsByClassName("current-hand-value")[0].innerHTML = `Current Hand Value: ${playerCardCount}`;
 }
 
-function playerHit() { 
+function disableButtons(className) {
+  var buttons = document.getElementsByClassName(className);
+
+  Array.from(buttons).forEach((button) => {
+    button.disabled = true;
+  });
+}
+
+function enableButton(className) {
+  var buttons = document.getElementsByClassName(className);
+
+  Array.from(buttons).forEach((button) => {
+    button.disabled = false;
+  });
+}
+
+function playerHit() {
   if (playerCount == 2){
     console.log("hit twice already")
     return
@@ -1943,7 +1969,7 @@ function stayHit() {
     centerCardSixX = 0.5;
     centerCardSixY = 2.0;
   } else if (playerCount == 2){
-    //Two hits 
+    //Two hits
     centerCardSevenX = 0.5;
     centerCardSevenY = 2.0;
   } else {
@@ -1965,7 +1991,7 @@ function natural(){
   originalStack = userStack;
   pmHandLocal = mat4(1.0);
   useRightTexture = false;
-  endGameAnimations = false; 
+  endGameAnimations = false;
   onlyDealOnce = false;
   dealerCardCount = 0;
   playerCardCount = 0;
@@ -2013,10 +2039,10 @@ function insurance(){
   if (!canInsure){
     alert("You can only insure when Dealer shows Ace and you have enough money!");
     return
-  } 
+  }
 
   alert("Insuring 1/2 of your bet: " + (insuranceBet).toString);
-  
+
   if (loseInsure){
     alert("No Dealer Blackjack! Lose your insurance", insuranceBet);
     userStack = userStack - insuranceBet;
@@ -2031,7 +2057,7 @@ function insurance(){
     originalStack = userStack;
     pmHandLocal = mat4(1.0);
     useRightTexture = false;
-    endGameAnimations = false; 
+    endGameAnimations = false;
     onlyDealOnce = false;
     dealerCardCount = 0;
     playerCardCount = 0;
@@ -2047,6 +2073,8 @@ function render() {
     selectBets();
   } else if (state == 2) {
     prepareForHand();
+    document.getElementsByClassName("current-game-stage")[0].textContent =
+      "Game Stage: Preparing for Hand";
   } else if (state == 3) {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     drawAll();
@@ -2054,6 +2082,8 @@ function render() {
     //animate cards dealt in
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     animateDeal();
+    document.getElementsByClassName("current-game-stage")[0].textContent =
+      "Game Stage: Perform Card Actions";
   } else if (state == 5){
     // animate a hit card
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -2062,6 +2092,8 @@ function render() {
     // dealer plays
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     animateDealer();
+    document.getElementsByClassName("current-game-stage")[0].textContent =
+      "Game Stage: Dealer Plays";
   } else if (state == 7){
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     natural();
